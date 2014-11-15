@@ -321,7 +321,7 @@ LIGHTS.Input.prototype = {
 
     //        console.log( key );
 
-    if( key == 38 || key == 87 )
+    if ( key == 38 || key == 87 )
       LIGHTS.Input.keyUp = true;
     else if( key == 40 || key == 83 )
       LIGHTS.Input.keyDown = true;

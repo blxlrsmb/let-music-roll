@@ -1,77 +1,168 @@
 {
   "id": "ooxx",
   "time": 100,
-  "phases" : [
-    {
-      "start": 7,
-      "config": {
-        "phase": 1,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 24.5,
-      "config": {
-        "phase": 10,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 40,
-      "config": {
-        "phase": 20,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 48,
-      "config": {
-        "phase": 15,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 55.5,
-      "config": {
-        "phase": 18,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 64,
-      "config": {
-        "phase": 4,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 72,
-      "config": {
-        "phase": 7,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 80,
-      "config": {
-        "phase": 21,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 88,
-      "config": {
-        "phase": 22,
-        "beatfreq": 0.5
-      }
-    },
-    {
-      "start": 96,
-      "config": {
-        "phase": 23,
-        "beatfreq": 0.5
-      }
-    }
-  ]
+  "phases" :
+    [
+      {
+        "start": 7,
+        "config": {
+          "phase": 1,
+          "beatfreq": 0.5
+        }
+      },
+      {
+        "start": 24.5,
+        "config": {
+          "phase": 1,
+          "beatfreq": 0.5
+        }
+      },
+      {
+        "start": 40,
+        "config": {
+          "phase": 1,
+          "beatfreq": 0.5
+        }
+      },
+			{
+				"start": 48,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 55.5,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 64,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 72,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 80,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 88,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 96,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 104,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 112,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 120,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 128,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 136,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 149.75,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 152,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 160,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 168,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 176,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 184,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 200,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 210,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			}
+    ]
 }
-
