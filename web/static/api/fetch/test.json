@@ -1,0 +1,29 @@
+{
+  "id": "ooxx",
+  "time": 100,
+  "phases" :
+    [
+      {
+        "start": 7,
+        "config": {
+          "phase": 1,
+          "beatfreq": 0.5
+        }
+      },
+      {
+        "start": 24.5,
+        "config": {
+          "phase": 1,
+          "beatfreq": 0.5
+        }
+      },
+      {
+        "start": 40,
+        "config": {
+          "phase": 1,
+          "beatfreq": 0.5
+        }
+      }
+    ]
+}
+
