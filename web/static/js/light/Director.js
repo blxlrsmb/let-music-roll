@@ -181,6 +181,7 @@ LIGHTS.Director.prototype = {
 
     if(! LIGHTS.releaseBuild )
       console.log( "Phase: " + LIGHTS.Music.phase.index );
+      console.log( "PhaseMode: " + LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase );
   }
 };
 
@@ -355,7 +356,7 @@ LIGHTS.Player.prototype = {
 
     if( this.isCamera ) {
 
-      switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
         case 0:
           this.camera.fov = this.fov = this.fovTarget = 25;
@@ -558,7 +559,7 @@ LIGHTS.SpectrumEvents.prototype = {
 
   update: function() {
 
-    if( LIGHTS.Music.phase.index < 23 ) {
+    if( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase < 23 ) {
 
       var deltaTime = LIGHTS.deltaTime,
       easingMore = deltaTime * 20,
@@ -1158,7 +1159,7 @@ LIGHTS.BeatEvents.prototype = {
      */
 
   launch: function() {
-    switch( LIGHTS.Music.phase.index ) {
+    switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
       case 0:
         this.terrain.reset();
@@ -1370,7 +1371,7 @@ LIGHTS.BeatEvents.prototype = {
 
   beat: function() {
 
-    switch( LIGHTS.Music.phase.index ) {
+    switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
       case 1:
         if( this.nextBeat == 0 ) {

@@ -239,10 +239,15 @@ LIGHTS.Music = {
       times: [],
       index: 0
     }
-    this.phaseConfigs = []
+    this.phaseConfig = [
+      {
+        phase: 0,
+        beatfreq: 0
+      }
+    ]
     for (var i = 0; i < data.phases.length; i ++) {
       this.phase.times.push(data.phases[i].start)
-      this.phaseConfigs.push(data.phases[i].config)
+      this.phaseConfig.push(data.phases[i].config)
     }
   }
 }

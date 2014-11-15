@@ -195,7 +195,7 @@ LIGHTS.StarManager.prototype = {
 
   launch: function() {
 
-      switch( LIGHTS.Music.phase.index ) {
+    switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
           case 0:
             this.particleSystem.visible = true;

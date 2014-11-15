@@ -219,7 +219,7 @@ LIGHTS.Ball.prototype = {
     this.selectedPhase = LIGHTS.Music.phase.index;
     this.scale = this.behaviour.scale;
 
-    switch( LIGHTS.Music.phase.index ) {
+    switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
         case 1:
         case 2:
@@ -1909,7 +1909,7 @@ LIGHTS.BallsManager.prototype = {
 
       var geo = this.geometries;
 
-        switch( LIGHTS.Music.phase.index ) {
+        switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
           case 0:
             this.beats = 1;
@@ -2050,7 +2050,7 @@ LIGHTS.BallsManager.prototype = {
 
       var geo = this.geometries;
 
-        switch( LIGHTS.Music.phase.index ) {
+        switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
             case 1:
               if( this.beats % 2 == 0 )

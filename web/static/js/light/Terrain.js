@@ -360,7 +360,7 @@ LIGHTS.TerrainDisplacement.prototype = {
 
     update: function() {
 
-      switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
       case 15:
       case 21:
@@ -1467,7 +1467,7 @@ LIGHTS.TerrainDotsManager.prototype = {
 
     launch: function() {
 
-        switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
             case 0:
         this.beats = 1;
@@ -1566,7 +1566,7 @@ LIGHTS.TerrainDotsManager.prototype = {
 
     beat: function() {
 
-        switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
             case 1:
             if( this.beats % 2 == 0 )
@@ -1635,7 +1635,7 @@ LIGHTS.TerrainDotsManager.prototype = {
     this.geometry.__dirtyVertices = this.dirtyVertices || this.terrainPlane.__dirtyVertices;
       this.dirtyVertices = false;
 
-      switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
         case 0:
           this.paintDarker( true, false, 4 );
@@ -2801,7 +2801,7 @@ LIGHTS.TerrainMeshManager.prototype = {
 
     launch: function() {
 
-        switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
           case 0:
         break;
 
@@ -2900,7 +2900,7 @@ LIGHTS.TerrainMeshManager.prototype = {
 
     beat: function() {
 
-        switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
       case 7:
         this.mapLines.drawLines( 4 );
@@ -2973,7 +2973,7 @@ LIGHTS.TerrainMeshManager.prototype = {
 
     update: function() {
 
-        switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 // REVIEW GLOWS
           case 1:
           case 2:

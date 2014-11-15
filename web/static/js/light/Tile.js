@@ -335,7 +335,7 @@ LIGHTS.CannonManager.prototype = {
 
       var geo = this.geometries;
 
-        switch( LIGHTS.Music.phase.index ) {
+      switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
           case 17: // C3
         this.resetSpotMaterials();
