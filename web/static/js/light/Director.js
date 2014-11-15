@@ -1,6 +1,6 @@
 
 //File: Director.js
-//Date: Sat Nov 15 20:39:59 2014 +0800
+//Date: Sat Nov 15 22:59:33 2014 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -353,6 +353,7 @@ LIGHTS.Player.prototype = {
   launch: function() {
 
     this.targetDistance = 150;
+    this.lastTime = LIGHTS.time;
 
     if( this.isCamera ) {
 
@@ -1106,12 +1107,21 @@ LIGHTS.BeatEvents.prototype = {
 
   // _______________________________________________________________________________________ Start
 
+  getBeatDataNow : function() {
+    now_phase_cfg =  LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index];
+    return now_phase_cfg.beatData;
+  },
+
   start: function() {
 
-    if( LIGHTS.Music.startTime > 0 )
-      this.lastTime = LIGHTS.Music.startTime;
-    else
-      this.lastTime = this.beatData.start - this.beatData.freq;
+    beatData = this.getBeatDataNow();
+    this.lastTime = beatData.start - beatData.freq;
+    /*
+     *if( LIGHTS.Music.startTime > 0 )
+     *  this.lastTime = LIGHTS.Music.startTime;
+     *else
+     *  this.lastTime = this.beatData.start - this.beatData.freq;
+     */
 
     this.nextIncluded = 0;
     this.included = true;
@@ -1128,19 +1138,21 @@ LIGHTS.BeatEvents.prototype = {
   // _______________________________________________________________________________________ Update
 
   update: function() {
+    beatData = this.getBeatDataNow();
+/*
+ *
+ *    if( this.included  &&  LIGHTS.time > this.beatData.included[ this.nextIncluded ] ) {
+ *
+ *      this.nextIncluded++;
+ *      this.included = (this.nextIncluded < this.beatData.included.length);
+ *    }
+ */
 
-    if( this.included  &&  LIGHTS.time > this.beatData.included[ this.nextIncluded ] ) {
-
-      this.nextIncluded++;
-      this.included = (this.nextIncluded < this.beatData.included.length);
-    }
-
-    if( LIGHTS.time >= this.beatData.start  &&  LIGHTS.time < this.beatData.end  &&  LIGHTS.time - this.lastTime > this.beatData.freq ) {
-
-      this.lastTime += this.beatData.freq;
-
-      if( this.beatData.excluded.indexOf( this.lastTime ) == -1 )
-        this.beat();
+    if( LIGHTS.time >= beatData.start  &&  LIGHTS.time < beatData.end  &&  LIGHTS.time - this.lastTime > beatData.freq ) {
+      console.log(beatData.freq);
+      console.log("BEAT" + this.lastTime);
+      this.lastTime += beatData.freq;
+      this.beat();
     }
   },
 
