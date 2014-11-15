@@ -1,9 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sat Nov 15 19:02:28 2014 +0800
+# $Date: Sat Nov 15 21:48:31 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
+import json
 import sys
 import argparse
 import os
@@ -13,12 +14,14 @@ import gc
 
 import subprocess
 
+import librosa
 from flask import Flask, request, jsonify
 import numpy as np
 
 from lmr.features import extract as extract_feature
 from lmr.utils import wavread, read_by_line, serial, ProgressReporter
 from lmr.utils.fs import TempDir
+from lmr.utils import concurrency
 
 from lmr.utils.iteration import pimap
 from itertools import imap, izip
@@ -81,14 +84,22 @@ class MusicAnalyseServer(object):
 
             x, fs = self.read_audio(audio_file, wavfile_path)
 
+            duration = len(x) / float(fs)
+            if duration >= 4 * 60:
+                return dict(status='error',
+                            message='music too long. analyse rejected.')
+
             # FIXME: unknown memory leak.
             # temporally fixed by computing in another process
             # and turn it off to release memories
             result = analyse_worker(self, x, fs)
 
-            return jsonify(result)
+            return jsonify(dict(
+                status='success',
+                data=result))
 
-            return jsonify(self._analyze_music(x, fs))
+#             from IPython import embed; embed()
+#             return jsonify(result)
 
 
     def xrangef(self, begin, end, step):
@@ -100,8 +111,7 @@ class MusicAnalyseServer(object):
     def rangef(self, begin, end, step):
         return list(self.xrangef(begin, end, step))
 
-    def _analyze_music(self, x, fs):
-
+    def _emotion_analyse(self, x, fs):
         X = self._extract_features(x, fs)
 
         arousals = self.arousal_model.predict(X)
@@ -110,11 +120,30 @@ class MusicAnalyseServer(object):
         cur = 0.0
         assert len(timing) == len(arousals)
 
-        ret = [(t, dict(arousal=arousal, valence=valence))
+        ret = [[t, dict(arousal=arousal, valence=valence)]
                 for t, arousal, valence in zip(timing, arousals, valences)]
         gc.collect()
         return ret
 
+    def _beat_analyses(self, x, fs):
+        print 1
+        print len(x), fs
+        y_harmonic, y_percussive = librosa.effects.hpss(x)
+
+        print 2
+        temp, beats = librosa.beat.beat_track(
+            y=y_percussive, sr=fs, hop_length=64)
+        print 3
+        beats_time = librosa.frames_to_time(beats, sr=fs, hop_length=64)
+        print 4
+        from IPython import embed; embed()
+        return beats_time
+
+    def _analyze_music(self, x, fs):
+#         emotion_series = self._emotion_analyse(x, fs)
+        beat_series = self._beat_analyses(x, fs)
+        return beat_series
+        return list(sorted(emotion_series + beat_series))
 
     def _load_model(self, model):
         if isinstance(model, basestring):
@@ -175,7 +204,7 @@ def main():
                 key))
         if typ not in typecvt:
             raise RuntimeError('invalid type specifier: `{}\''.format(typ))
-        typ = typecv[typ]
+        typ = typecvt[typ]
         setattr(config, key, typ(val))
 
     server = MusicAnalyseServer(
