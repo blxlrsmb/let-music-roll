@@ -1,6 +1,6 @@
 
 //File: Director.js
-//Date: Sat Nov 15 20:08:27 2014 +0800
+//Date: Sat Nov 15 20:39:59 2014 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -1208,11 +1208,13 @@ LIGHTS.BeatEvents.prototype = {
       case 4:
       case 5:
       case 6:
+        this.terrainDots.active = true;
         this.terrainDots.launch();
         this.balls.launch();
         break;
 
       case 7: // B2
+        this.terrainDots.active = true;
         this.balls.launch();
         this.terrainMesh.launch();
         this.terrainDots.launch();
@@ -1230,12 +1232,14 @@ LIGHTS.BeatEvents.prototype = {
         break;
 
       case 9: // B2c
+        this.terrainDots.active = false;
         this.player.launch();
         this.balls.launch();
         this.tileManager.apply();
         break;
 
       case 10: // B2d
+        this.terrainDots.active = false;
         this.balls.launch();
         this.tileManager.apply();
         break;
@@ -1253,6 +1257,7 @@ LIGHTS.BeatEvents.prototype = {
 
       case 12: // C2b
         this.balls.launch();
+        this.terrainDots.active = true;
         this.terrainDots.launch();
         this.tileManager.apply();
         break;
@@ -1260,6 +1265,7 @@ LIGHTS.BeatEvents.prototype = {
       case 13: // C2c
         this.balls.launch();
         this.terrainMesh.launch();
+        this.terrainDots.active = true;
         this.terrainDots.launch();
         this.tileManager.apply();
 
@@ -1268,17 +1274,13 @@ LIGHTS.BeatEvents.prototype = {
 
       case 14: // C2d
         this.terrainMesh.launch();
-        //            this.tileManager.apply();
-        //            this.tubes.active = true;
-        //            this.tubes.launch();
-        //            this.tileManager.apply();
         break;
 
       case 15: // D1
         this.balls.launch();
+        this.terrainDots.active = true;
         this.terrainDots.launch();
         this.terrainMesh.launch();
-        //            this.terrainDots.active = false;
         this.tileManager.apply();
 
         this.displacement.active = true;
@@ -1288,6 +1290,7 @@ LIGHTS.BeatEvents.prototype = {
 
       case 16: // S!
         this.terrainMesh.launch();
+        this.terrainDots.active = true;
         this.terrainDots.launch();
         this.balls.launch();
         this.tileManager.apply();

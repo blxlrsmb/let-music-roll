@@ -187,7 +187,7 @@ LIGHTS.Music = {
 
   startTime: 0,   //  0 A1
   //    startTime: 6,   //  1 B1
-  //    startTime: 20,  //  2 B1a
+//      startTime: 20,  //  2 B1a
   //    startTime: 36,  //  3 C1
   //    startTime: 42,  //  4 C1a
   //    startTime: 50,  //  5 C1c

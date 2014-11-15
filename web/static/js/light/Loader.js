@@ -1,5 +1,5 @@
 //File: Loader.js
-//Date: Sat Nov 15 16:52:08 2014 +0800
+//Date: Sat Nov 15 20:50:52 2014 +0800
 
 // loader/handler of various resources
 
@@ -81,32 +81,10 @@ LIGHTS.Loader.prototype = {
 
     LIGHTS.tweets = [];
     this.isServerOk = false;
-
-    if( ! LIGHTS.releaseBuild ) {
-
-      this.onLoadTweetsError();
-    }
-    else {
-
-      try {
-
-        var script = document.createElement( 'script' );
-        script.type = 'text/javascript';
-        script.src = LIGHTS.Config.tweetsFeed;
-        document.body.appendChild( script );
-
-        this.timeout = setTimeout( 'LIGHTS.Loader.prototype.instance.onLoadTweetsError()', 5000 );
-      }
-      catch( error ) {
-
-        console.error( "Error: loadTweets", error );
-        this.onLoadTweetsError();
-      }
-    }
+    this.onLoadTweetsError();
   },
 
   onLoadTweetsError: function() {
-
     this.loadAvatarImages( [] );
   },
 

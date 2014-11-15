@@ -1,5 +1,5 @@
 //File: Balls.js
-//Date: Sat Nov 15 20:29:05 2014 +0800
+//Date: Sat Nov 15 20:30:59 2014 +0800
 
 // Balls which turn white and black at the beginning
 
@@ -1810,8 +1810,7 @@ LIGHTS.BallsManager.prototype = {
 
   initialize: function( director ) {
 
-        this.director = director;
-
+    this.director = director;
     this.geometries = new LIGHTS.BallGeometries( director );
 
     var terrain = director.terrain,
