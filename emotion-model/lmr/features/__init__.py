@@ -1,10 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: __init__.py
-# $Date: Sat Nov 15 17:06:29 2014 +0800
+# $Date: Sat Nov 15 18:42:34 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 from bregman import suite, features
+import gc
 
 def _bregman(clsname, ws, st):
     '''
@@ -18,7 +19,10 @@ def _bregman(clsname, ws, st):
         nfft = fs
         wfft = int(fs * ws)
         nhop = int(fs * st)
-        return cls(x, sample_rate=fs, nfft=fs, wfft=wfft, nhop=nhop).X.T
+        ret = cls(x, sample_rate=fs, nfft=fs, wfft=wfft, nhop=nhop).X.T
+        gc.collect()
+        return ret
+
 
     return extract
 
