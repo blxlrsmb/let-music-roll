@@ -15,6 +15,7 @@ LIGHTS.API.prototype = {
       method: 'post',
       data: item,
       processData: false,
+      contentType: false,
       dataType: 'json',
       success: function(data, status, xhr) {
         callback(data);

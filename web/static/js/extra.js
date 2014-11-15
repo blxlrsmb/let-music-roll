@@ -29,7 +29,9 @@ $(document).ready(function() {
           var md5sum = md5(d.target.result);
           LIGHTS.Lights.instance.loader.api.fetchByHash(md5sum, function(result) {
             if (result.status != 'success') {
-              LIGHTS.Lights.instance.loader.api.fetchByAudio(music, function(result) {
+              var data = new FormData();
+              data.append('audio', music);
+              LIGHTS.Lights.instance.loader.api.fetchByAudio(data, function(result) {
                 if (result.status != 'success') {
                   console.error('Failed to fetch config');
                 } else {
