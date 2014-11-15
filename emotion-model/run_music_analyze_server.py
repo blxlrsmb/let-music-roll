@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 04:57:28 2014 +0800
+# $Date: Sun Nov 16 05:32:56 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -197,12 +197,16 @@ class MusicAnalyseServer(object):
                         status='error',
                         detail='Unable to generate animation config')
             except Exception as e:
+                import traceback
                 ret = dict(
                     status='error',
-                    detail=e.message)
+                    detail=traceback.format_exc())
             else:
                 ret = dict(status='success',
-                           data=animation_config)
+                           data=dict(
+                               analyse_result=analyse_result,
+                               config=animation_config
+                           ))
         return ret
 
 

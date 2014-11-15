@@ -35,13 +35,13 @@ $(document).ready(function() {
                 if (result.status != 'success') {
                   console.error('Failed to fetch config');
                 } else {
-                  config = result.data;
+                  config = result.data.config;
                   if (musicSrc)
                     LIGHTS.Lights.instance.loader.doLoad(musicSrc, config);
                 }
               });
             } else {
-              config = result.data;
+              config = result.data.config;
               if (musicSrc)
                 LIGHTS.Lights.instance.loader.doLoad(musicSrc, config);
             }
