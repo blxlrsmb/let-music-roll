@@ -219,7 +219,7 @@ LIGHTS.Music = {
     this.phaseConfig = [
       {
         phase: 0,
-        beatfreq: 0
+        beatfreq: 0.5
       }
     ]
     for (var i = 0; i < data.phases.length; i ++) {

@@ -80,27 +80,27 @@ LIGHTS.Config = {
 
 	defaultTweets: [
 
-		'HelloEnjoy',
-		'CherrytreeRec',
-		'PolydorRecords',
-		'Interscope',
-		'EllieGoulding',
-		'CherrytreeRec',
-		'PolydorRecords',
-		'Interscope',
-		'EllieGoulding'
+		'HackShanghai',
+		'VuryLeo',
+		'zbwmqlw',
+		'zxytim',
+		'ppwwyyxx',
+		'HaskRay',
+		'github',
+		'lilydjwg',
+		'fqj1994'
 	],
 
 	defaultAvatars: [
 
-		'images/avatars/ellie.jpeg',
-		'images/avatars/cherrytree.png',
-		'images/avatars/polydor.png',
-		'images/avatars/interscope.png',
-		'images/avatars/blue.png',
-		'images/avatars/magenta.png',
-		'images/avatars/green.png',
-		'images/avatars/orange.png',
-		'images/avatars/red.png'
+		'images/avatars/hackshanghai.png',
+		'images/avatars/vuryleo.png',
+		'images/avatars/zbwmqlw.png',
+		'images/avatars/zxytim.png',
+		'images/avatars/ppwwyyxx.png',
+		'images/avatars/haskray.png',
+		'images/avatars/github.png',
+		'images/avatars/lilydjwg.png',
+		'images/avatars/fqj1994.png'
 	]
 };
