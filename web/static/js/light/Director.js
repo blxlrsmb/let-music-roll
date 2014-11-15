@@ -1140,7 +1140,10 @@ LIGHTS.BeatEvents.prototype = {
       this.lastTime += this.beatData.freq;
 
       if( this.beatData.excluded.indexOf( this.lastTime ) == -1 )
+      {
+        console.log('BEAT', this.lastTime)
         this.beat();
+      }
     }
   },
 
@@ -1159,6 +1162,7 @@ LIGHTS.BeatEvents.prototype = {
      */
 
   launch: function() {
+    this.beatData.freq = LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].beatfreq;
     switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
       case 0:
