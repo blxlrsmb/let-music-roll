@@ -7,9 +7,7 @@ LIGHTS.API.prototype = {
     this.baseurl = baseurl
   },
   fetch: function(item, callback) {
-    $.getJSON(this.baseurl + "/fetch/" + item,
-      callback
-    )
+    $.getJSON(this.baseurl + "/fetch/" + item, callback)
   }
 }
 
