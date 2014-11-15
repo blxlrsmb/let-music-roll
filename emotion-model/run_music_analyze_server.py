@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 03:16:41 2014 +0800
+# $Date: Sun Nov 16 03:37:32 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -66,6 +66,11 @@ class bind(object):
     def __call__(self):
         return self.func(*self.args, **self.kwargs)
 
+
+class AnalyseError(Exception):
+    pass
+
+
 class MusicAnalyseServer(object):
     def __init__(self, arousal_model, valence_model, feature_list,
                  temp_dir, precomputed_results_dir, port, ws=0.5, st=0.5):
@@ -126,48 +131,16 @@ class MusicAnalyseServer(object):
         @app.route('/api/analyse', methods=['POST'])
         def analyse():
             temp_dir = TempDir(dir=self.temp_dir, remove_on_exit=False)
-            file_storage = request.files['music']
-
-            tempdir = temp_dir.tempdir()
-            filename = file_storage.filename
-            audio_file = os.path.join(tempdir, filename)
-            file_storage.save(audio_file)
+            audio_file = self.save_audio_on_request(temp_dir)
 
             hash_idx = self._hash_by_file_content(audio_file)
             logger.info('hash_idx: {}'.format(hash_idx))
-            if hash_idx in self.precomputed_idx:
-                logger.info('precomputed result found for `{}\'.'.format(
-                    filename))
-                try:
-                    return jsonify(self._load_precomputed(hash_idx))
-                except Exception as e:
-                    logger.error('unable to load {}, compute again'.format(
-                        hash_idx))
 
-            wavfile_path = os.path.join(tempdir, filename + '.wav')
+            result = self.get_analyse_result_by_hash(hash_idx)
+            if result is not None:
+                return jsonify(dict(status='success', data=result))
 
-            logger.info('loading audio ...')
-            x, fs = self.read_audio(audio_file, wavfile_path)
-            logger.info('audio loaded.')
-
-            duration = len(x) / float(fs)
-            if duration >= 5 * 60:
-                return jsonify(dict(status='error',
-                            message='music too long. analyse rejected.'))
-
-            # FIXME: unknown memory leak.
-            # temporally fixed by computing in another process
-            # and turn it off to release memories
-
-            emotion_series, beat_series = parallel(
-                bind(single_worker_call_member_method,
-                    self, '_emotion_analyse', x, fs),
-                bind(single_worker_call_member_method,
-                    self, '_beat_analyses', x, fs))
-
-
-            result = list(sorted(emotion_series + beat_series,
-                           key=operator.itemgetter(0)))
+            result = self._do_analayse(audio_file)
 
             result_path = os.path.join(self.precomputed_results_dir,
                                        hash_idx)
@@ -178,6 +151,64 @@ class MusicAnalyseServer(object):
             return jsonify(dict(
                 status='success',
                 data=result))
+
+        ###### BUILD APPP END #####
+
+    def get_analyse_result_by_hash(self, hash_idx):
+        ''':return: None if not found, otherwise the cached results'''
+        if hash_idx in self.precomputed_idx:
+            logger.info('precomputed result found for `{}\', '
+                        'try loading...'.format(
+                hash_idx))
+            try:
+                return self._load_precomputed(hash_idx)
+            except Exception as e:
+                logger.error('unable to load {}'.format(
+                    hash_idx))
+        return None
+
+    def save_audio_on_request(self, temp_dir):
+        '''save uploaded audio
+        :return: audio file path'''
+        file_storage = request.files['music']
+
+        tempdir = temp_dir.tempdir()
+        filename = file_storage.filename
+        audio_file = os.path.join(tempdir, filename)
+        file_storage.save(audio_file)
+
+        return audio_file
+
+
+    def _do_analyse(self, audio_file):
+        ''':return: analyse result.
+        may throw AnalyseError exception'''
+        filename = os.path.basename(audio_file)
+        wavfile_path = os.path.join(tempdir, filename + '.wav')
+
+        logger.info('loading audio ...')
+        x, fs = self.read_audio(audio_file, wavfile_path)
+        logger.info('audio loaded.')
+
+        duration = len(x) / float(fs)
+        if duration >= 5 * 60:
+            raise AnalyseError('music too long. analyse rejected.')
+
+        # FIXME: unknown memory leak.
+        # temporally fixed by computing in another process
+        # and turn it off to release memories
+
+        emotion_series, beat_series = parallel(
+            bind(single_worker_call_member_method,
+                self, '_emotion_analyse', x, fs),
+            bind(single_worker_call_member_method,
+                self, '_beat_analyses', x, fs))
+
+
+        result = list(sorted(emotion_series + beat_series,
+                       key=operator.itemgetter(0)))
+
+        return result
 
     def _read_precomputed_results(self, dirname):
         ret = dict()
