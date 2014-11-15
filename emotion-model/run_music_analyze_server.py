@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 04:37:58 2014 +0800
+# $Date: Sun Nov 16 04:46:04 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -136,25 +136,17 @@ class MusicAnalyseServer(object):
 
         @app.route('/api/get_animation_config_by_audio', methods=['POST'])
         def gen_animation_config_by_audio():
-            print 1
             temp_dir = TempDir(dir=self.temp_dir, remove_on_exit=False)
-            print 2
             audio_file = self.save_audio_on_request(temp_dir)
-            print 3
 
             hash_idx = self._hash_by_file_content(audio_file)
-            print 4
             logger.info('hash_idx: {}'.format(hash_idx))
-            print 5
 
             result = self.get_analyse_result_by_hash(hash_idx)
-            print 6
             self._cache_analyse_result(result, hash_idx)
-            print 7
 
             ret = self._gen_anim_conf_resp_data_by_analyse_result(
                 result, hash_idx)
-            print 8
 
             return jsonify(ret)
 
@@ -229,18 +221,11 @@ class MusicAnalyseServer(object):
         '''save uploaded audio
         :return: audio file path'''
 
-        print '#1'
-        file_storage = request.files['music']
-        print '#2'
-
+        file_storage = request.files['audio']
         tempdir = temp_dir.tempdir()
-        print '#3'
         filename = file_storage.filename
-        print '#4'
         audio_file = os.path.join(tempdir, filename)
-        print '#5'
         file_storage.save(audio_file)
-        print '#6'
 
         return audio_file
 
