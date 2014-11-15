@@ -1,6 +1,6 @@
 
 //File: Director.js
-//Date: Sat Nov 15 17:01:55 2014 +0800
+//Date: Sat Nov 15 20:08:27 2014 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -1210,7 +1210,6 @@ LIGHTS.BeatEvents.prototype = {
       case 6:
         this.terrainDots.launch();
         this.balls.launch();
-        //              this.tileManager.apply();
         break;
 
       case 7: // B2

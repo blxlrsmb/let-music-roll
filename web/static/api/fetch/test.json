@@ -13,21 +13,21 @@
       {
         "start": 24.5,
         "config": {
-          "phase": 1,
+          "phase": 10,
           "beatfreq": 0.5
         }
       },
       {
         "start": 40,
         "config": {
-          "phase": 1,
+          "phase": 5,
           "beatfreq": 0.5
         }
       },
 			{
 				"start": 48,
 				"config": {
-					"phase": 1,
+					"phase": 3,
 					"beatfreq": 0.5
 				}
 			},

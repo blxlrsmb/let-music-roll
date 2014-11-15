@@ -1,5 +1,5 @@
 //File: Balls.js
-//Date: Sat Nov 15 00:41:15 2014 +0800
+//Date: Sat Nov 15 20:29:05 2014 +0800
 
 // Balls which turn white and black at the beginning
 
@@ -276,8 +276,6 @@ LIGHTS.Ball.prototype = {
 
   unselect: function( force ) {
 
-//    console.log( "unselect", force, this.selectedPhase, LIGHTS.Music.phase.index);
-
     this.unselected = true;
 
     switch( this.selectedPhase ) {
@@ -333,9 +331,7 @@ LIGHTS.Ball.prototype = {
         if( this.state == 0 ) {
 
           this.selected = force? false : (this.grow <= 0.99);
-        }
-        else if( force ) {
-
+        } else if( force ) {
           this.interactive = this.unselected = this.selectAdditive = false;
           this.addR.value =
           this.addG.value =
@@ -358,12 +354,9 @@ LIGHTS.Ball.prototype = {
 
     // Visible
     if( this.visible && this.container.visible ) {
-
       this.ball.visible = this.ball.active;
       this.balloon.visible = this.balloon.active;
-    }
-    else {
-
+    } else {
       this.ball.visible =
       this.balloon.visible = false;
     }
@@ -372,15 +365,12 @@ LIGHTS.Ball.prototype = {
     if( this.selectAdditive ) {
 
       if( this.selected ) {
-
         easing = deltaTime * 10;
         this.addR.value -= (this.addR.value - this.selectAddR) * easing;
         this.addG.value -= (this.addG.value - this.selectAddG) * easing;
         this.addB.value -= (this.addB.value - this.selectAddB) * easing;
         this.selectAdd -= (this.selectAdd - 1) * easing;
-      }
-      else if( this.unselected ) {
-
+      } else if( this.unselected ) {
         easing = deltaTime * 10;
         this.addR.value -= this.addR.value * easing;
         this.addG.value -= this.addG.value * easing;
@@ -388,7 +378,6 @@ LIGHTS.Ball.prototype = {
         this.selectAdd -= this.selectAdd * easing;
 
         if( this.selectAdd < 0.01 ) {
-
           this.addR.value =
           this.addG.value =
           this.addB.value = 0;
@@ -401,50 +390,24 @@ LIGHTS.Ball.prototype = {
       }
     }
 
-    // Spikes
-//    var updateVertices = false;
-//
-//    if( this.selected && this.alpha < 0.99 ) {
-//
-//      this.alpha -= (this.alpha - 1) * deltaTime * 5;
-//      updateVertices = true;
-//    }
-//    else if( this.alpha > 0 ) {
-//
-//      this.alpha -= (this.alpha - 0) * deltaTime * 10;
-//
-//      if( this.alpha < 0.01 )
-//        this.alpha = 0;
-//
-//      updateVertices = true;
-//    }
-//
-//    if( updateVertices )
-//      this.geometries.tweenSphereSpikes( this.ball.geometry, this.alpha );
-
     // State
     switch( this.state ) {
 
       case 0:
         if( this.selectGrow ) {
-
           if( this.selected ) {
-
             // Grow
             this.grow -= (this.grow - 0.3) * deltaTime * 4;
             this.scale -= (this.scale - behaviour.rootScale * 1.5) * deltaTime * 4;
 
             if( this.grow > 0.29 && this.unselected )
               this.selected = false;
-          }
-          else if( this.unselected ) {
-
+          } else if( this.unselected ) {
             // Grow
             this.grow -= (this.grow - 0) * deltaTime * 4;
             this.scale -= (this.scale - behaviour.scale) * deltaTime * 12;
 
             if( this.grow < 0.01 ) {
-
               this.interactive = this.unselected = this.selectGrow = false;
               this.scale = behaviour.scale;
             }
@@ -452,27 +415,16 @@ LIGHTS.Ball.prototype = {
 
           this.setPosition( this.grow * this.stemLength * this.scale );
           this.setScale();
-
-          // Displacement
-//          if( this.terrainDisplacement.active )
-//            this.setRotation();
-        }
-        else if( this.selectMultiply ) {
+        } else if( this.selectMultiply ) {
 
           if( this.selected ) {
-
             if( this.sphereMaterial.multiply.value < 1 ) {
-
               this.sphereMaterial.multiply.value -= (this.sphereMaterial.multiply.value - 1) * deltaTime * 10;
-
               if( this.sphereMaterial.multiply.value > 0.99 )
                 this.sphereMaterial.multiply.value = 1;
             }
-          }
-          else if( this.unselected ) {
-
+          } else if( this.unselected ) {
             this.sphereMaterial.multiply.value -= (this.sphereMaterial.multiply.value - 0) * deltaTime * 10;
-
             if( this.sphereMaterial.multiply.value < 0.01 ) {
 
               this.sphereMaterial.multiply.value = 0;
@@ -502,21 +454,8 @@ LIGHTS.Ball.prototype = {
         break;
 
       case 2:
-        // Grow
-//        if( this.ball.parent !== null && this.ball.parent !== undefined ) {
-//
-//          if( behaviour.scale == 0.01 ) {
-//
-//            this.ball.active = this.ball.visible = false;
-//
-//            if( this.ball.parent === this.container )
-//              THREE.MeshUtils.removeChild( this.scene, this.container, this.ball );
-//          }
-//        }
-
         // Launch ball
         if( this.balloon.active ) {
-
           this.balloon.position.copy( behaviour.ballPosition );
           this.ball.position.copy( behaviour.ballPosition );
           this.balloon.quaternion.multiplySelf( this.rotation );
@@ -1905,384 +1844,373 @@ LIGHTS.BallsManager.prototype = {
 
     // _______________________________________________________________________________________ Events
 
-    launch: function() {
+  launch: function() {
 
-      var geo = this.geometries;
+    var geo = this.geometries;
 
-        switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
+    switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
-          case 0:
-            this.beats = 1;
-            this.resetState( 0 );
-            this.setSphereMultiplyAdditive( 0.0, 0.0 );
-            break;
+      case 0:
+        this.beats = 1;
+      this.resetState( 0 );
+      this.setSphereMultiplyAdditive( 0.0, 0.0 );
+      break;
 
-            case 1:
-//              geo.updateDrops( 0.8 );
-              geo.setSphereBlend( false );
-              this.setSphereMultiplyAdditive( 0.0, 1.0, 0 );
-                this.showGroup( 0, true );
-                this.showGroup( 1, false );
-                break;
+      case 1:
+        //              geo.updateDrops( 0.8 );
+        geo.setSphereBlend( false );
+      this.setSphereMultiplyAdditive( 0.0, 1.0, 0 );
+      this.showGroup( 0, true );
+      this.showGroup( 1, false );
+      break;
 
-            case 2:
-              this.setSphereMultiplyAdditive( 0.0, 1.0, 1 );
-                this.showGroup( 1, true );
-                break;
+      case 2:
+        this.setSphereMultiplyAdditive( 0.0, 1.0, 1 );
+      this.showGroup( 1, true );
+      break;
 
-            case 3: // C1
-            this.setSphereMultiplyAdditive( 1.0, 1.0 );
-//              geo.setStemColors( 0xFFFFFF );
-              this.activateFat( true );
-              this.setFat( phi, 1 );
-              this.nextBeat = 1;
-              break;
+      case 3: // C1
+        this.setSphereMultiplyAdditive( 1.0, 1.0 );
+      //              geo.setStemColors( 0xFFFFFF );
+      this.activateFat( true );
+      this.setFat( phi, 1 );
+      this.nextBeat = 1;
+      break;
 
-            case 4:
-          case 6:
-            this.setSphereAdditive( 1.0 );
-            this.setFat( phi, 1 );
-            this.nextBeat = 1;
-                break;
+      case 4:
+        this.setSphereAdditive( 1.0 );
+      this.setFat( phi, 1 );
+      this.nextBeat = 1;
+      break;
+      case 5:
+        this.changeFat();
+      this.nextBeat = 2;
+      break;
 
-          case 5:
-            this.changeFat();
-            this.nextBeat = 2;
-                break;
+      case 6:
+        this.setSphereAdditive( 1.0 );
+      this.setFat( phi, 1 );
+      this.nextBeat = 1;
+      break;
 
-          case 7: // B2
-            this.unselect();
-            this.setSphereMultiply( 0.0 );
-            this.activateFat( false );
-                break;
+      case 7: // B2
+        this.unselect();
+      this.setSphereMultiply( 0.0 );
+      this.activateFat( false );
+      break;
 
-          case 8:
-            this.unselect();
-            this.setSphereMultiplyAdditive( 1.0, 1.0 );
-            this.nextBeat = 1;
-                break;
+      case 8:
+        this.unselect();
+      this.setSphereMultiplyAdditive( 1.0, 1.0 );
+      this.nextBeat = 1;
+      break;
 
-          case 9:
+      case 9:
         this.beats = 0;
-            this.unselect();
-            this.setState( 1, true );
-//            this.activateGrow( true );
-            this.setGrow( 0, 0 );
-            this.setGrow( 1, 1 );
-              break;
+      this.unselect();
+      this.setState( 1, true );
+      //            this.activateGrow( true );
+      this.setGrow( 0, 0 );
+      this.setGrow( 1, 1 );
+      break;
 
-          case 10:
-              this.beats = 1;
-              break;
+      case 10:
+        this.beats = 1;
+      break;
 
-          case 11: // C2
-            this.setSphereAdditive( 1.0 );
-//            geo.setStemColors( 0x000000 );
-//            this.activateFat( true );
-//            this.setFat( phi, 1 );
-//            this.setState( 2, false, 1 );
-            this.setState( 2, true );
-            this.nextBeat = 1;
-              break;
+      case 11: // C2
+        this.setSphereAdditive( 1.0 );
+      //            geo.setStemColors( 0x000000 );
+      //            this.activateFat( true );
+      //            this.setFat( phi, 1 );
+      //            this.setState( 2, false, 1 );
+      this.setState( 2, true );
+      this.nextBeat = 1;
+      break;
 
-          case 13:
-            this.setState( 3, true );
-                break;
+      case 13:
+        this.setState( 3, true );
+      break;
 
-          case 15: // D1
-              break;
-
-          case 16: // S!
-//            geo.updateDrops( 0.8 );
-
-//            this.setSphereMultiplyAdditive( 0.0, 0.0 );
-//            geo.setStemColors( 0x000000 );
-//            geo.setStemReflection( 0 );
-//            this.setState( 3, false, 1 );
-                break;
-
-          case 17: // C3
-            this.resetState( 0 );
-            this.activateFat( true );
-            this.setFat( phi, 1 );
-            geo.setSphereBlend( false );
-            this.setSphereMultiplyAdditive( 1.0, 1.0 );
-//            geo.setStemColors( 0xFFFFFF );
-//            geo.resetStemReflection();
-            this.setRotation();
-            this.nextBeat = 1;
-                break;
-
-          case 18:
-            this.setSphereMultiplyAdditive( 1.0, 1.0 );
-//            geo.setStemColors( 0xFFFFFF );
-            this.unselect();
-            this.setState( 1, true );
-            this.setGrow( 0, 1 );
-            this.setGrow( 1, 0 );
-            this.nextBeat = 1;
-              break;
-
-          case 19:
-          case 20:
-            this.setSphereMultiplyAdditive( 1.0, 1.0 );
-//            geo.setStemColors( 0xFFFFFF );
-            this.changeGrow();
-            this.beats = 0;
-            this.nextBeat = 1;
-              break;
-
-          case 21: // D2
-            this.setSphereMultiplyAdditive( 1.0, 1.0 );
-//            geo.setStemColors( 0x000000 );
-            this.setState( 2, true );
-            this.nextBeat = 1;
-                break;
-
-          case 22: // A2
-            this.setState( 3, true );
-//            this.setSphereMultiply( 0.0 );
-              break;
-        }
-    },
-
-    beat: function() {
-
-      var geo = this.geometries;
-
-        switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
-
-            case 1:
-              if( this.beats % 2 == 0 )
-                this.setSphereAdditive( 1.0, 0 );
-              else
-                this.setSphereAdditive( 0.0, 0 );
-//                this.selectBallsAdditive( 0 );
-                break;
-
-            case 2:
-              if( this.beats % 2 == 0 ) {
-
-                this.setSphereAdditive( 1.0, 0 );
-                this.setSphereAdditive( 0.0, 1 );
-//                geo.setSphereAdditive( 1.0, 0 );
-//                this.selectBallsAdditive( 1 );
-              }
-              else {
-
-                this.setSphereAdditive( 0.0, 0 );
-                this.setSphereAdditive( 1.0, 1 );
-//                this.selectBallsAdditive( 0 );
-//                geo.setSphereAdditive( 1.0, 1 );
-              }
-              break;
-
-          case 3:
-          case 4:
-          case 6:
-            if( this.nextBeat == 0 ) {
-
-              this.changeFat();
-            }
-            else {
-
-              this.setFat( 0, 1 );
-              this.setFat( 1, 0.5 );
-              this.setSphereAdditive( 0.0 );
-//              geo.resetStemColors();
-              this.nextBeat--;
-            }
-            break;
-
-          case 5:
-            if( this.nextBeat == 0 ) {
-
-              this.changeFat();
-            }
-            else if( this.nextBeat == 1 ) {
-
-              this.setFat( 0, 1 );
-              this.setFat( 1, 0.5 );
-              this.setSphereAdditive( 0.0 );
-//              geo.resetStemColors();
-              this.nextBeat--;
-            }
-            else {
-
-              this.setFat( phi, 1 );
-              this.setSphereAdditive( 1.0 );
-//              geo.setStemColors( 0xFFFFFF );
-              this.nextBeat--;
-            }
-          break;
-
-          case 8:
-            if( this.nextBeat == 1 ) {
-
-              this.setSphereAdditive( 0.0 );
-              this.nextBeat--;
-            }
+      case 15: // D1
         break;
 
-          case 9:
-        if( this.beats > 1 && this.beats % 2 == 0 )
-          this.changeGrow();
-            break;
+      case 16: // S!
+        //            geo.updateDrops( 0.8 );
 
-          case 10:
-            if( this.beats == 15 ) {
+        //            this.setSphereMultiplyAdditive( 0.0, 0.0 );
+        //            geo.setStemColors( 0x000000 );
+        //            geo.setStemReflection( 0 );
+        //            this.setState( 3, false, 1 );
+        break;
 
-              this.setGrow( 1, 0 );
-              this.setGrow( 1, 1 );
-            }
-            else if( this.beats < 16 && this.beats % 2 == 1 ) {
+      case 17: // C3
+        this.resetState( 0 );
+      this.activateFat( true );
+      this.setFat( phi, 1 );
+      geo.setSphereBlend( false );
+      this.setSphereMultiplyAdditive( 1.0, 1.0 );
+      //            geo.setStemColors( 0xFFFFFF );
+      //            geo.resetStemReflection();
+      this.setRotation();
+      this.nextBeat = 1;
+      break;
 
-              this.changeGrow();
-            }
-              break;
+      case 18:
+        this.setSphereMultiplyAdditive( 1.0, 1.0 );
+      //            geo.setStemColors( 0xFFFFFF );
+      this.unselect();
+      this.setState( 1, true );
+      this.setGrow( 0, 1 );
+      this.setGrow( 1, 0 );
+      this.nextBeat = 1;
+      break;
 
-        case 11:
-          if( this.nextBeat == 1 ) {
-
-            this.setSphereAdditive( 0.0 );
-            this.removeSpheres();
-            geo.setSphereBlend( true );
-            this.nextBeat--;
-          }
-          break;
-
-//          case 13:
-//            if( this.nextBeat == 0 ) {
-//
-//              this.changeFat();
-//            }
-//            else if( this.nextBeat == 1 ) {
-//
-//              this.setFat( 0, 1 );
-//              this.setFat( 1, 0.5 );
-//              this.nextBeat--;
-//            }
-//            else {
-//
-//              this.setFat( phi, 1 );
-//              geo.setSphereAdditive( 1.0 );
-//              geo.setStemColors( 0xFFFFFF );
-//              this.nextBeat--;
-//            }
-//          break;
-
-        case 17:
-          if( this.nextBeat == 0 ) {
-
-            this.changeFat();
-          }
-          else {
-
-            this.setFat( 0, 1 );
-            this.setFat( 1, 0.5 );
-            this.setSphereAdditive( 0.0 );
-//            geo.resetStemColors();
-            this.nextBeat--;
-          }
-            break;
-
-          case 18:
-          case 19:
-            if( this.nextBeat == 1 ) {
-
-              this.setSphereAdditive( 0.0 );
-//              geo.resetStemColors();
-
-              this.nextBeat--;
-            }
-
-            if( this.beats % 2 == 1 )
-                this.changeGrow();
-              break;
-
+      case 19:
         case 20:
-          if( this.nextBeat == 1 ) {
+        this.setSphereMultiplyAdditive( 1.0, 1.0 );
+      //            geo.setStemColors( 0xFFFFFF );
+      this.changeGrow();
+      this.beats = 0;
+      this.nextBeat = 1;
+      break;
 
-            this.setSphereAdditive( 0.0 );
-//            geo.resetStemColors();
+      case 21: // D2
+        this.setSphereMultiplyAdditive( 1.0, 1.0 );
+      //            geo.setStemColors( 0x000000 );
+      this.setState( 2, true );
+      this.nextBeat = 1;
+      break;
 
-            this.nextBeat--;
-          }
+      case 22: // A2
+        this.setState( 3, true );
+      //            this.setSphereMultiply( 0.0 );
+      break;
+    }
+  },
 
-          if( this.beats == 13 ) {
+  beat: function() {
 
-            this.setGrow( 1, 0 );
-            this.setGrow( 1, 1 );
-          }
-          else if( this.beats < 14 && this.beats % 2 == 1 ) {
+    var geo = this.geometries;
 
-            this.changeGrow();
-          }
-            break;
+    switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
-        case 21:
-          if( this.nextBeat == 1 ) {
+      case 1:
+        if( this.beats % 2 == 0 )
+      this.setSphereAdditive( 1.0, 0 );
+      else
+        this.setSphereAdditive( 0.0, 0 );
+      //                this.selectBallsAdditive( 0 );
+      break;
 
-            this.setSphereAdditive( 0.0 );
-            geo.setSphereBlend( true );
-//            geo.resetStemColors();
+      case 2:
+        if( this.beats % 2 == 0 ) {
 
-            this.nextBeat--;
-          }
-        break;
+        this.setSphereAdditive( 1.0, 0 );
+        this.setSphereAdditive( 0.0, 1 );
+        //                geo.setSphereAdditive( 1.0, 0 );
+        //                this.selectBallsAdditive( 1 );
+      }
+      else {
 
-//          case 19:
-//            this.changeFat();
-//
-//            if( this.beats % 2 == 0 )
-//                this.changeGrow();
-//              break;
+        this.setSphereAdditive( 0.0, 0 );
+        this.setSphereAdditive( 1.0, 1 );
+        //                this.selectBallsAdditive( 0 );
+        //                geo.setSphereAdditive( 1.0, 1 );
+      }
+      break;
 
-        }
-        this.beats++;
-    },
+      case 3:
+        case 4:
+        case 6:
+        if( this.nextBeat == 0 ) {
 
-    // _______________________________________________________________________________________ Update
+        this.changeFat();
+      }
+      else {
 
-//    update: function() {
-//
-//      // Update tiles
-//      var tiles = this.tiles,
-//        il = tiles.length,
-//        i;
-//
-//      for( i = 0; i < il; i++ )
-//        tiles[ i ].update();
-//
-//      this.explosions.update();
-//    },
+        this.setFat( 0, 1 );
+        this.setFat( 1, 0.5 );
+        this.setSphereAdditive( 0.0 );
+        //              geo.resetStemColors();
+        this.nextBeat--;
+      }
+      break;
 
-    update: function() {
+      case 5:
+        if( this.nextBeat == 0 ) {
 
-      var behaviours = this.behaviours,
-        i, il;
+        this.changeFat();
+      }
+      else if( this.nextBeat == 1 ) {
 
-      for( i = 0, il = behaviours.length; i < il; i++ )
-          behaviours[ i ].update();
+        this.setFat( 0, 1 );
+        this.setFat( 1, 0.5 );
+        this.setSphereAdditive( 0.0 );
+        //              geo.resetStemColors();
+        this.nextBeat--;
+      }
+      else {
 
-      this.explosions.update();
+        this.setFat( phi, 1 );
+        this.setSphereAdditive( 1.0 );
+        //              geo.setStemColors( 0xFFFFFF );
+        this.nextBeat--;
+      }
+      break;
 
-//      if( this.state == 1 )
-//          this.geometries.updateDrops();
-    },
+      case 8:
+        if( this.nextBeat == 1 ) {
+
+        this.setSphereAdditive( 0.0 );
+        this.nextBeat--;
+      }
+      break;
+
+      case 9:
+        if( this.beats > 1 && this.beats % 2 == 0 )
+      this.changeGrow();
+      break;
+
+      case 10:
+        if( this.beats == 15 ) {
+
+        this.setGrow( 1, 0 );
+        this.setGrow( 1, 1 );
+      }
+      else if( this.beats < 16 && this.beats % 2 == 1 ) {
+
+        this.changeGrow();
+      }
+      break;
+
+      case 11:
+        if( this.nextBeat == 1 ) {
+
+        this.setSphereAdditive( 0.0 );
+        this.removeSpheres();
+        geo.setSphereBlend( true );
+        this.nextBeat--;
+      }
+      break;
+
+      //          case 13:
+      //            if( this.nextBeat == 0 ) {
+      //
+      //              this.changeFat();
+      //            }
+      //            else if( this.nextBeat == 1 ) {
+      //
+      //              this.setFat( 0, 1 );
+      //              this.setFat( 1, 0.5 );
+      //              this.nextBeat--;
+      //            }
+      //            else {
+      //
+      //              this.setFat( phi, 1 );
+      //              geo.setSphereAdditive( 1.0 );
+      //              geo.setStemColors( 0xFFFFFF );
+      //              this.nextBeat--;
+      //            }
+      //          break;
+
+      case 17:
+        if( this.nextBeat == 0 ) {
+
+        this.changeFat();
+      }
+      else {
+
+        this.setFat( 0, 1 );
+        this.setFat( 1, 0.5 );
+        this.setSphereAdditive( 0.0 );
+        //            geo.resetStemColors();
+        this.nextBeat--;
+      }
+      break;
+
+      case 18:
+        case 19:
+        if( this.nextBeat == 1 ) {
+
+        this.setSphereAdditive( 0.0 );
+        //              geo.resetStemColors();
+
+        this.nextBeat--;
+      }
+
+      if( this.beats % 2 == 1 )
+        this.changeGrow();
+      break;
+
+      case 20:
+        if( this.nextBeat == 1 ) {
+
+        this.setSphereAdditive( 0.0 );
+        //            geo.resetStemColors();
+
+        this.nextBeat--;
+      }
+
+      if( this.beats == 13 ) {
+
+        this.setGrow( 1, 0 );
+        this.setGrow( 1, 1 );
+      }
+      else if( this.beats < 14 && this.beats % 2 == 1 ) {
+
+        this.changeGrow();
+      }
+      break;
+
+      case 21:
+        if( this.nextBeat == 1 ) {
+
+        this.setSphereAdditive( 0.0 );
+        geo.setSphereBlend( true );
+        //            geo.resetStemColors();
+
+        this.nextBeat--;
+      }
+      break;
+
+      //          case 19:
+      //            this.changeFat();
+      //
+      //            if( this.beats % 2 == 0 )
+      //                this.changeGrow();
+      //              break;
+
+    }
+    this.beats++;
+  },
+
+  update: function() {
+
+    var behaviours = this.behaviours,
+    i, il;
+
+    for( i = 0, il = behaviours.length; i < il; i++ )
+    behaviours[ i ].update();
+
+    this.explosions.update();
+
+    //      if( this.state == 1 )
+    //          this.geometries.updateDrops();
+  },
 
   raycast: function() {
 
-      var origin = this.ray.origin,
-          mouse = this.mouse,
-          balls = this.balls,
-          ball, colliders, collider, other, i, il;
+    var origin = this.ray.origin,
+    mouse = this.mouse,
+    balls = this.balls,
+    ball, colliders, collider, other, i, il;
 
     mouse.x = LIGHTS.Input.mouseX;
     mouse.y = -LIGHTS.Input.mouseY;
     mouse.z = 0.5;
 
-      this.projector.unprojectVector( mouse, this.camera );
+    this.projector.unprojectVector( mouse, this.camera );
 
     mouse.x -= origin.x;
     mouse.y -= origin.y;
@@ -2290,10 +2218,10 @@ LIGHTS.BallsManager.prototype = {
     mouse.normalize();
 
     // Rollover
-      colliders = this.mouseOverCollisions.rayCastAll( this.ray );
+    colliders = this.mouseOverCollisions.rayCastAll( this.ray );
 
     for( i = 0, il = balls.length; i < il; i++ )
-      balls[ i ].mouseOver = false;
+    balls[ i ].mouseOver = false;
 
     for( i = 0, il = colliders.length; i < il; i++ ) {
 
@@ -2329,14 +2257,14 @@ LIGHTS.BallsManager.prototype = {
       collider = this.clickCollisions.rayCastNearest( this.ray );
 
       if( collider !== null && (collider.ball.ball.visible || collider.ball.balloon.visible) )
-          this.explosions.launchExplosion( collider.ball );
+        this.explosions.launchExplosion( collider.ball );
     }
   },
 
   unselect: function() {
 
-      var balls = this.balls,
-          ball, i, il;
+    var balls = this.balls,
+    ball, i, il;
 
     for( i = 0, il = balls.length; i < il; i++ ) {
 
@@ -2347,35 +2275,32 @@ LIGHTS.BallsManager.prototype = {
     }
   },
 
+  showGroup: function( groupIndex, visible ) {
 
-    // _______________________________________________________________________________________ Private
+    var tiles = this.tiles,
+    behaviours = this.behaviours,
+    i, il, j, jl, group, child;
 
-    showGroup: function( groupIndex, visible ) {
+    for( i = 0, il = tiles.length; i < il; i++ ) {
 
-        var tiles = this.tiles,
-        behaviours = this.behaviours,
-          i, il, j, jl, group, child;
+      group = tiles[ i ].groups[ groupIndex ];
 
-      for( i = 0, il = tiles.length; i < il; i++ ) {
+      for( j = 0, jl = group.length; j < jl; j++ )
+      group[ j ].visible = visible;
+    }
 
-        group = tiles[ i ].groups[ groupIndex ];
+    for( i = 0, il = behaviours.length; i < il; i++ )
+    if( behaviours[ i ].groupIndex == groupIndex )
+      behaviours[ i ].visible = visible;
 
-        for( j = 0, jl = group.length; j < jl; j++ )
-        group[ j ].visible = visible;
-        }
-
-      for( i = 0, il = behaviours.length; i < il; i++ )
-          if( behaviours[ i ].groupIndex == groupIndex )
-            behaviours[ i ].visible = visible;
-
-      this.visibleGroups[ groupIndex ] = visible;
-    },
+    this.visibleGroups[ groupIndex ] = visible;
+  },
 
   setState: function( state, force, ratio ) {
 
     var behaviours = this.behaviours,
-      prevState = state - 1,
-      i, il, behaviour;
+    prevState = state - 1,
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
@@ -2391,36 +2316,36 @@ LIGHTS.BallsManager.prototype = {
   resetState: function( state ) {
 
     var behaviours = this.behaviours,
-      i, il;
+    i, il;
 
     for( i = 0, il = behaviours.length; i < il; i++ )
-      behaviours[ i ].setState( state );
+    behaviours[ i ].setState( state );
   },
 
   setRotation: function() {
 
     var balls = this.balls,
-      il = balls.length,
-      i;
+    il = balls.length,
+    i;
 
     for( i = 0; i < il; i++ )
-      balls[ i ].setRotation();
+    balls[ i ].setRotation();
   },
 
   removeSpheres: function() {
 
     var balls = this.balls,
-      il = balls.length,
-      i;
+    il = balls.length,
+    i;
 
     for( i = 0; i < il; i++ )
-      balls[ i ].removeSphere();
+    balls[ i ].removeSphere();
   },
 
   selectBallsAdditive: function( group ) {
 
     var tiles = this.tiles,
-      groupBalls, ball, i, il, j, jl;
+    groupBalls, ball, i, il, j, jl;
 
     for( i = 0, il = tiles.length; i < il; i++ ) {
 
@@ -2437,12 +2362,12 @@ LIGHTS.BallsManager.prototype = {
   setSphereAdditive: function( additive, group ) {
 
     var behaviours = this.behaviours,
-      notGroup = (group === undefined),
-      i, il;
+    notGroup = (group === undefined),
+    i, il;
 
     for( i = 0, il = behaviours.length; i < il; i++ )
-      if( notGroup || behaviours[ i ].groupIndex == group )
-            behaviours[ i ].additive = additive;
+    if( notGroup || behaviours[ i ].groupIndex == group )
+      behaviours[ i ].additive = additive;
 
     this.geometries.setSphereAdditive( additive, group );
   },
@@ -2450,8 +2375,8 @@ LIGHTS.BallsManager.prototype = {
   setSphereMultiplyAdditive: function( multiply, additive, group ) {
 
     var behaviours = this.behaviours,
-      notGroup = (group === undefined),
-      i, il, behaviour;
+    notGroup = (group === undefined),
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
@@ -2470,31 +2395,31 @@ LIGHTS.BallsManager.prototype = {
   setSphereMultiply: function( multiply, group ) {
 
     var behaviours = this.behaviours,
-      notGroup = (group === undefined),
-      i, il;
+    notGroup = (group === undefined),
+    i, il;
 
     for( i = 0, il = behaviours.length; i < il; i++ )
-      if( notGroup || behaviours[ i ].groupIndex == group )
-            behaviours[ i ].multiply = multiply;
+    if( notGroup || behaviours[ i ].groupIndex == group )
+      behaviours[ i ].multiply = multiply;
 
     this.geometries.setSphereMultiply( multiply, group );
   },
 
-    // _______________________________________________________________________________________ Fat
+  // _______________________________________________________________________________________ Fat
 
   activateFat: function( ok ) {
 
     var behaviours = this.behaviours,
-      i, il;
+    i, il;
 
     for( i = 0, il = behaviours.length; i < il; i++ )
-      behaviours[ i ].fatActive = ok;
+    behaviours[ i ].fatActive = ok;
   },
 
   changeFat: function() {
 
     var behaviours = this.behaviours,
-      i, il, behaviour;
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
@@ -2508,7 +2433,7 @@ LIGHTS.BallsManager.prototype = {
   setFat: function( fat, ratio ) {
 
     var behaviours = this.behaviours,
-      i, il, behaviour;
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
@@ -2519,25 +2444,23 @@ LIGHTS.BallsManager.prototype = {
     }
   },
 
-    // _______________________________________________________________________________________ Grow
-
   activateGrow: function( ok ) {
 
     var behaviours = this.behaviours,
-      i, il, behaviour;
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
       behaviour = behaviours[ i ];
       behaviour.growActive = ok;
-//      behaviour.growTarget = ( Math.random() > 0.5 )? 1 : 0;
+      //      behaviour.growTarget = ( Math.random() > 0.5 )? 1 : 0;
     }
   },
 
   changeGrow: function() {
 
     var behaviours = this.behaviours,
-      i, il, behaviour;
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
@@ -2551,7 +2474,7 @@ LIGHTS.BallsManager.prototype = {
   setGrow: function( grow, groupIndex ) {
 
     var behaviours = this.behaviours,
-      i, il, behaviour;
+    i, il, behaviour;
 
     for( i = 0, il = behaviours.length; i < il; i++ ) {
 
@@ -2574,81 +2497,47 @@ LIGHTS.BallsTile = function( manager, container ) {
 
 LIGHTS.BallsTile.prototype = {
 
-    // _______________________________________________________________________________________ Constructor
+  // _______________________________________________________________________________________ Constructor
 
   initialize: function( manager, container ) {
 
-        this.manager = manager;
+    this.manager = manager;
     this.containerPosition = container.position;
     this.cameraPosition = manager.director.view.camera.position;
 
-        this.children = [];
-        this.balls = [];
+    this.children = [];
+    this.balls = [];
     this.groups = [ [], [] ];
 
-        var i, j, child, ball, visible, groupIndex;
+    var i, j, child, ball, visible, groupIndex;
 
-        for( i = 0; i < manager.ballsPerTile; i++ ) {
+    for( i = 0; i < manager.ballsPerTile; i++ ) {
 
-          groupIndex = i % 2;
-          ball = new LIGHTS.Ball( manager, container, i, groupIndex );
+      groupIndex = i % 2;
+      ball = new LIGHTS.Ball( manager, container, i, groupIndex );
 
-          for( j = 0; j < ball.children.length; j++ )
-        this.children.push( ball.children[ j ] );
+      for( j = 0; j < ball.children.length; j++ )
+      this.children.push( ball.children[ j ] );
 
-          // Save
-          this.groups[ groupIndex ].push( ball );
-          this.balls.push( ball );
-          manager.balls.push( ball );
-        }
+      // Save
+      this.groups[ groupIndex ].push( ball );
+      this.balls.push( ball );
+      manager.balls.push( ball );
+    }
 
     // Update new groups
     for( i = 0; i < this.groups.length; i++ ) {
-
       group = this.groups[ i ];
       visible = manager.visibleGroups[ i ];
-
       for( j = 0; j < group.length; j++ ) {
-
         ball = group[ j ];
         ball.visible = visible;
-
-//        ball.setState( this.ballState );
-//        ball.ballGrow = this.ballGrow;
-//        ball.ballFat = this.ballFat;
       }
     }
+    manager.tiles.push( this );
+  },
 
-    // Debug
-    // this.children.push( new THREE.Mesh( new THREE.SphereGeometry( 80, 12, 10 ), new THREE.MeshBasicMaterial( { color: 0xFFFF00, wireframe: true } )) );
-
-        manager.tiles.push( this );
-    },
-
-    // _______________________________________________________________________________________ Update
-
-//    update: function() {
-//
-//      var balls = this.balls,
-//        i, il;
-//
-//    for( i = 0, il = balls.length; i < il; i++ )
-//      balls[ i ].update();
-//    },
-
-  updateTile: function() {
-
-      var balls = this.balls,
-        ball, i, il;
-
-//    for( i = 0, il = balls.length; i < il; i++ ) {
-//
-//      ball = balls[ i ];
-//
-//      if( ball.selected )
-//        ball.unselect();
-//    }
-    }
+  updateTile: function() { }
 };
 
 /**
