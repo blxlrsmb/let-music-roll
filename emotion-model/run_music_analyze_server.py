@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 02:34:23 2014 +0800
+# $Date: Sun Nov 16 03:16:41 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -115,9 +115,16 @@ class MusicAnalyseServer(object):
     def build_app(self):
         app = self.app
 
+        @app.route('/api/get_animation_config_by_hash', methods=['GET'])
+        def get_animation_config_by_hash():
+            pass
+
+        @app.route('/api/gen_animation_config_by_audio', methods=['POST'])
+        def gen_animation_config_by_audio():
+            pass
+
         @app.route('/api/analyse', methods=['POST'])
         def analyse():
-            print self.temp_dir
             temp_dir = TempDir(dir=self.temp_dir, remove_on_exit=False)
             file_storage = request.files['music']
 
