@@ -23,7 +23,56 @@
           "phase": 1,
           "beatfreq": 0.5
         }
-      }
+      },
+			{
+				"start": 48,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 55.5,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 64,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 72,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 80,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 88,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			},
+			{
+				"start": 96,
+				"config": {
+					"phase": 1,
+					"beatfreq": 0.5
+				}
+			}
     ]
 }
 

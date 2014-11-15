@@ -1,5 +1,5 @@
 //File: Director.js
-//Date: Sat Nov 15 00:58:18 2014 +0800
+//Date: Sat Nov 15 16:12:22 2014 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -10,178 +10,178 @@ LIGHTS.Director = function( view ) {
 
 LIGHTS.Director.prototype = {
 
-    // _______________________________________________________________________________________ Constructor
+	// _______________________________________________________________________________________ Constructor
 
 	initialize: function( view ) {
 
-        this.view = view;
+		this.view = view;
 
-        // Stage
+		// Stage
 		this.player = new LIGHTS.Player( this );
 		this.vox = new LIGHTS.Vox( this );
 		this.materialCache = new LIGHTS.MaterialCache( this );
 
-        this.terrain = new LIGHTS.Terrain( this );
-        this.tileManager = new LIGHTS.TileManager( this );
+		this.terrain = new LIGHTS.Terrain( this );
+		this.tileManager = new LIGHTS.TileManager( this );
 
-        this.skybox = new LIGHTS.Skybox( this );
-//		this.stars = new LIGHTS.Stars( this );
+		this.skybox = new LIGHTS.Skybox( this );
+		//		this.stars = new LIGHTS.Stars( this );
 
-        // Events
-        this.beatEvents = new LIGHTS.BeatEvents( this );
+		// Events
+		this.beatEvents = new LIGHTS.BeatEvents( this );
 		this.volumeEvents = new LIGHTS.VolumeEvents( this );
 		this.spectrumEvents = new LIGHTS.SpectrumEvents( this );
 
-        this.music = LIGHTS.musicAudio;
+		this.music = LIGHTS.musicAudio;
 	},
 
-    // _______________________________________________________________________________________ Start
+	// _______________________________________________________________________________________ Start
 
-    start: function() {
+	start: function() {
 
-//        this.lastTime = -1;
-	    this.lastTime = new Date().getTime();
+		//        this.lastTime = -1;
+		this.lastTime = new Date().getTime();
 
-        // Music
+		// Music
 		this.music.currentTime = LIGHTS.time = LIGHTS.Music.startTime;
-        this.music.play();
-        this.music.volume = LIGHTS.Music.mute? 0 : 1;
-	    LIGHTS.deltaTime = 0;
+		this.music.play();
+		this.music.volume = LIGHTS.Music.mute? 0 : 1;
+		LIGHTS.deltaTime = 0;
 
-	    this.view.start();
+		this.view.start();
 
-        // Phase
-        LIGHTS.Music.phase.index = 0;
-        this.launch();
+		// Phase
+		LIGHTS.Music.phase.index = 0;
+		this.launch();
 
-        // Events
-        this.beatEvents.start();
-	    this.volumeEvents.start();
+		// Events
+		this.beatEvents.start();
+		this.volumeEvents.start();
 
-	    this.isFast = false;
-	    this.active = true;
+		this.isFast = false;
+		this.active = true;
 
-    },
+	},
 
-    stop: function() {
+	stop: function() {
 
 		this.active = false;
-	    this.music.pause();
+		this.music.pause();
 
-	    this.view.stop();
+		this.view.stop();
 
-        // Stage
-        this.vox.stop();
+		// Stage
+		this.vox.stop();
 
-//        this.terrain.stop();
-//        this.tileManager.stop();
+		//        this.terrain.stop();
+		//        this.tileManager.stop();
 
-        // Events
-        this.beatEvents.stop();
-//	    this.volumeEvents.stop();
-//	    this.spectrumEvents.stop();
+		// Events
+		this.beatEvents.stop();
+		//	    this.volumeEvents.stop();
+		//	    this.spectrumEvents.stop();
 
-//this.stars.stop();
+		//this.stars.stop();
 
-//        this.skybox.stop();
-//	    console.log("DIRECTOR STOP");
-    },
+		//        this.skybox.stop();
+		//	    console.log("DIRECTOR STOP");
+	},
 
-    // _______________________________________________________________________________________ Update
+	// _______________________________________________________________________________________ Update
 
-    update: function() {
+	update: function() {
 
-	    if( ! LIGHTS.releaseBuild && LIGHTS.Input.keySpace )
-	        LIGHTS.Lights.instance.playHome();
+		if( ! LIGHTS.releaseBuild && LIGHTS.Input.keySpace )
+			LIGHTS.Lights.instance.playHome();
 
-        // Time
-        var time = new Date().getTime();
+		// Time
+		var time = new Date().getTime();
 
-        if( this.lastTime != -1 ) {
+		if( this.lastTime != -1 ) {
 
-	        if( ! LIGHTS.releaseBuild && LIGHTS.Input.keyUp ) {
+			if( ! LIGHTS.releaseBuild && LIGHTS.Input.keyUp ) {
 
-		        if( ! this.isFast ) {
+				if( ! this.isFast ) {
 
-			        this.isFast = true;
-			        this.music.volume = 0;
-		        }
+					this.isFast = true;
+					this.music.volume = 0;
+				}
 
-		        LIGHTS.deltaTime = (time - this.lastTime) / 1000 + 0.1;
+				LIGHTS.deltaTime = (time - this.lastTime) / 1000 + 0.1;
 				LIGHTS.time += LIGHTS.deltaTime;
-	        }
-	        else {
+			}
+			else {
 
-		        LIGHTS.deltaTime = (time - this.lastTime) / 1000;
+				LIGHTS.deltaTime = (time - this.lastTime) / 1000;
 
-		        if( this.isFast ) {
+				if( this.isFast ) {
 
-			        this.isFast = false;
-			        this.music.volume = LIGHTS.Music.mute? 0 : 1;
-			        this.music.currentTime = LIGHTS.time + LIGHTS.deltaTime;
-		        }
-		        else {
+					this.isFast = false;
+					this.music.volume = LIGHTS.Music.mute? 0 : 1;
+					this.music.currentTime = LIGHTS.time + LIGHTS.deltaTime;
+				}
+				else {
 
-			        // Sync with music
-			        LIGHTS.time = this.music.currentTime;
+					// Sync with music
+					LIGHTS.time = this.music.currentTime;
 
-			        // Sync with time
-//			        LIGHTS.time += LIGHTS.deltaTime;
-		        }
-	        }
-        }
-	    else {
+					// Sync with time
+					//			        LIGHTS.time += LIGHTS.deltaTime;
+				}
+			}
+		}
+		else {
 
-	        LIGHTS.time = LIGHTS.deltaTime = this.music.currentTime;
-        }
+			LIGHTS.time = LIGHTS.deltaTime = this.music.currentTime;
+		}
 
-	    LIGHTS.deltaTime = Math.min( LIGHTS.deltaTime, 0.2 );
+		LIGHTS.deltaTime = Math.min( LIGHTS.deltaTime, 0.2 );
 
-        this.lastTime = time;
+		this.lastTime = time;
 
-        // Phase
-        if( LIGHTS.time > LIGHTS.Music.phase.times[ LIGHTS.Music.phase.index ] ) {
+		// Phase
+		if( LIGHTS.time > LIGHTS.Music.phase.times[ LIGHTS.Music.phase.index ] ) {
 
-            LIGHTS.Music.phase.index++;
-            this.launch();
+			LIGHTS.Music.phase.index++;
+			this.launch();
 
-	        if( LIGHTS.time > LIGHTS.Music.phase.times[ LIGHTS.Music.phase.index ] ) {
+			if( LIGHTS.time > LIGHTS.Music.phase.times[ LIGHTS.Music.phase.index ] ) {
 
-		        this.beatEvents.beat();
-		        this.beatEvents.beat();
-		        this.beatEvents.beat();
-		        this.beatEvents.beat();
-	        }
-        }
+				this.beatEvents.beat();
+				this.beatEvents.beat();
+				this.beatEvents.beat();
+				this.beatEvents.beat();
+			}
+		}
 
-        // Stage
-        this.player.update();
-        this.vox.update();
-        this.terrain.update();
-        this.tileManager.update();
+		// Stage
+		this.player.update();
+		this.vox.update();
+		this.terrain.update();
+		this.tileManager.update();
 
-        // Events
-        this.beatEvents.update();
-	    this.volumeEvents.update();
-	    this.spectrumEvents.update();
+		// Events
+		this.beatEvents.update();
+		this.volumeEvents.update();
+		this.spectrumEvents.update();
 
-        this.skybox.update();
-    },
+		this.skybox.update();
+	},
 
 	postUpdate: function() {
 
 		this.tileManager.balls.raycast();
 	},
 
-    // _______________________________________________________________________________________ Private
+	// _______________________________________________________________________________________ Private
 
-    launch: function() {
+	launch: function() {
 
-        this.beatEvents.launch();
+		this.beatEvents.launch();
 
-	    if( ! LIGHTS.releaseBuild )
-            console.log( "Phase: " + LIGHTS.Music.phase.index );
-    }
+		if(! LIGHTS.releaseBuild )
+			console.log( "Phase: " + LIGHTS.Music.phase.index );
+	}
 };
 
 LIGHTS.Player = function( director ) {
@@ -191,10 +191,10 @@ LIGHTS.Player = function( director ) {
 
 LIGHTS.Player.prototype = {
 
-    playerPan:          0.25,
-    playerPanFast:      0.75,
+	playerPan:          0.25,
+	playerPanFast:      0.75,
 
-    // _______________________________________________________________________________________ Constructor
+	// _______________________________________________________________________________________ Constructor
 
 	initialize: function( director ) {
 
@@ -219,15 +219,15 @@ LIGHTS.Player.prototype = {
 			var trident = new THREE.Trident();
 			trident.position.y = 100;
 			this.camera.addChild( trident );
-		    director.view.scene.addChild( this.camera );
+			director.view.scene.addChild( this.camera );
 			this.targetPosition = new THREE.Object3D().position;
 		}
 
-        this.frustum = 60 * deg2rad;
-        this.angle = 30 * deg2rad;
-        this.forward = new THREE.Vector2( 0, -1 );
-        this.right = new THREE.Vector2( 1, 0 );
-        this.cameraUp = new THREE.Vector3();
+		this.frustum = 60 * deg2rad;
+		this.angle = 30 * deg2rad;
+		this.forward = new THREE.Vector2( 0, -1 );
+		this.right = new THREE.Vector2( 1, 0 );
+		this.cameraUp = new THREE.Vector3();
 		this.rollAxis = new THREE.Vector3();
 		this.auxMatrix = new THREE.Matrix4();
 
@@ -242,56 +242,56 @@ LIGHTS.Player.prototype = {
 		this.duration = 1;
 	},
 
-    // _______________________________________________________________________________________ Update
+	// _______________________________________________________________________________________ Update
 
-    update: function( immediate ) {
+	update: function( immediate ) {
 
-        var input = LIGHTS.Input,
-            deltaTime = LIGHTS.deltaTime,
-            move = 0,
-	        userMult;
+		var input = LIGHTS.Input,
+		deltaTime = LIGHTS.deltaTime,
+		move = 0,
+		userMult;
 
-        if( ! LIGHTS.releaseBuild && input.keyDown )
-            return;
+		if( ! LIGHTS.releaseBuild && input.keyDown )
+			return;
 
-	    immediate = (immediate !== undefined);
-	    userMult = immediate? 0 : 1;
-	    deltaTime *= userMult;
+		immediate = (immediate !== undefined);
+		userMult = immediate? 0 : 1;
+		deltaTime *= userMult;
 
-	    if( ! immediate ) {
+		if( ! immediate ) {
 
-		    // Tween
-		    if( this.alpha < 1 && ! immediate ) {
+			// Tween
+			if( this.alpha < 1 && ! immediate ) {
 
-			    // Alpha
-			    this.alpha += deltaTime / this.duration;
+				// Alpha
+				this.alpha += deltaTime / this.duration;
 
-			    if( this.alpha > 1 )
-			        this.alpha = 1;
+				if( this.alpha > 1 )
+					this.alpha = 1;
 
-			    var alpha = (Math.sin( this.alpha * rad180 - rad90 ) + 1) * 0.5,
-			        alphaMinus = 1 - alpha;
+				var alpha = (Math.sin( this.alpha * rad180 - rad90 ) + 1) * 0.5,
+				alphaMinus = 1 - alpha;
 
-			    this.altitude = this.altitudeOrigin * alphaMinus + this.altitudeTarget * alpha;
-			    this.tilt = this.tiltOrigin * alphaMinus + this.tiltTarget * alpha;
-			    this.velocity = this.velocityOrigin * alphaMinus + this.velocityTarget * alpha;
+				this.altitude = this.altitudeOrigin * alphaMinus + this.altitudeTarget * alpha;
+				this.tilt = this.tiltOrigin * alphaMinus + this.tiltTarget * alpha;
+				this.velocity = this.velocityOrigin * alphaMinus + this.velocityTarget * alpha;
 
-			    if( this.isCamera ) {
+				if( this.isCamera ) {
 
-				    this.fov = this.fovOrigin * alphaMinus + this.fovTarget * alpha;
+					this.fov = this.fovOrigin * alphaMinus + this.fovTarget * alpha;
 
-				    if( this.camera.fov != this.fov ) {
+					if( this.camera.fov != this.fov ) {
 
-					    this.camera.fov = this.fov;
-			            this.camera.updateProjectionMatrix();
+						this.camera.fov = this.fov;
+						this.camera.updateProjectionMatrix();
 					}
-			    }
-		    }
+				}
+			}
 
-		    // Turbo
-		    if( input.mouseDown )
+			// Turbo
+			if( input.mouseDown )
 				this.turbo -= (this.turbo - 2.5) * deltaTime * 4;
-		    else
+			else
 				this.turbo -= (this.turbo - 1) * deltaTime * 2;
 
 			// Move
@@ -299,55 +299,55 @@ LIGHTS.Player.prototype = {
 
 			// Steer
 			this.angle -= input.mouseX * this.turbo * deltaTime * this.velocity * 0.001;
-	    }
+		}
 
 		// Update
-        this.cameraPosition.x += this.forward.x * move;
-	    this.cameraPosition.y = this.altitude;
-        this.cameraPosition.z += this.forward.y * move;
+		this.cameraPosition.x += this.forward.x * move;
+		this.cameraPosition.y = this.altitude;
+		this.cameraPosition.z += this.forward.y * move;
 
 		this.targetPosition.x = this.cameraPosition.x - Math.sin( this.angle ) * this.targetDistance;
 		this.targetPosition.y = this.cameraPosition.y;
 		this.targetPosition.z = this.cameraPosition.z - Math.cos( this.angle ) * this.targetDistance;
 
-        if( ! this.isCamera ) {
+		if( ! this.isCamera ) {
 
 			this.director.view.camera.position.x = this.cameraPosition.x;
 			this.director.view.camera.position.z = this.cameraPosition.z;
-        }
+		}
 
-	    // Roll
-	    this.roll -= (this.roll - (userMult * input.mouseX * this.velocity * 0.001)) * deltaTime * 0.3 * this.turbo;
-	    this.rollAxis.sub( this.cameraPosition, this.targetPosition );
-	    this.rollAxis.normalize();
-	    this.cameraUp.x = this.cameraUp.z = 0; this.cameraUp.y = 1;
-	    this.auxMatrix.setRotationAxis( this.rollAxis, -this.roll );
-	    this.auxMatrix.rotateAxis( this.cameraUp );
-	    this.camera.matrix.lookAt( this.cameraPosition, this.targetPosition, this.cameraUp );
+		// Roll
+		this.roll -= (this.roll - (userMult * input.mouseX * this.velocity * 0.001)) * deltaTime * 0.3 * this.turbo;
+		this.rollAxis.sub( this.cameraPosition, this.targetPosition );
+		this.rollAxis.normalize();
+		this.cameraUp.x = this.cameraUp.z = 0; this.cameraUp.y = 1;
+		this.auxMatrix.setRotationAxis( this.rollAxis, -this.roll );
+		this.auxMatrix.rotateAxis( this.cameraUp );
+		this.camera.matrix.lookAt( this.cameraPosition, this.targetPosition, this.cameraUp );
 
-	    // Tilt
-	    this.cameraTilt -= (this.cameraTilt + (userMult * input.mouseY * this.velocity * 0.0005) + this.tilt) * deltaTime * 2;
-	    this.auxMatrix.setRotationX( this.cameraTilt );
-	    this.camera.matrix.multiply( this.camera.matrix, this.auxMatrix );
+		// Tilt
+		this.cameraTilt -= (this.cameraTilt + (userMult * input.mouseY * this.velocity * 0.0005) + this.tilt) * deltaTime * 2;
+		this.auxMatrix.setRotationX( this.cameraTilt );
+		this.camera.matrix.multiply( this.camera.matrix, this.auxMatrix );
 
-	    // Position
-	    this.camera.matrix.setPosition( this.cameraPosition );
-	    this.camera.update( null, true, this.camera );
+		// Position
+		this.camera.matrix.setPosition( this.cameraPosition );
+		this.camera.update( null, true, this.camera );
 
-	    // Update target
-	    this.targetPosition.x = this.targetPosition.y = 0;
-	    this.targetPosition.z = -this.targetDistance;// * this.velocity * 0.1;
-	    this.camera.matrix.multiplyVector3( this.targetPosition );
+		// Update target
+		this.targetPosition.x = this.targetPosition.y = 0;
+		this.targetPosition.z = -this.targetDistance;// * this.velocity * 0.1;
+		this.camera.matrix.multiplyVector3( this.targetPosition );
 
-	    // Update FWD>>
-	    this.forward.x = -Math.sin( this.angle );
-	    this.forward.y = -Math.cos( this.angle );
+		// Update FWD>>
+		this.forward.x = -Math.sin( this.angle );
+		this.forward.y = -Math.cos( this.angle );
 
-	    this.right.x = -Math.sin( this.angle + rad90 );
-	    this.right.y = -Math.cos( this.angle + rad90 );
-    },
+		this.right.x = -Math.sin( this.angle + rad90 );
+		this.right.y = -Math.cos( this.angle + rad90 );
+	},
 
-    // _______________________________________________________________________________________ Launch
+	// _______________________________________________________________________________________ Launch
 
 	launch: function() {
 
@@ -358,113 +358,113 @@ LIGHTS.Player.prototype = {
 			switch( LIGHTS.Music.phase.index ) {
 
 				case 0:
-					this.camera.fov = this.fov = this.fovTarget = 25;
-					this.camera.updateProjectionMatrix();
+			  this.camera.fov = this.fov = this.fovTarget = 25;
+				this.camera.updateProjectionMatrix();
 
-					this.cameraPosition.y = this.altitude = -40;
-					this.altitudeTarget = 60;
-					this.cameraTilt = this.tilt = -rad90 * 0.1;
-					this.tiltTarget = rad90 * 0.1;
-					this.velocity = this.velocityTarget = 0;
-					this.alpha = 1;
+				this.cameraPosition.y = this.altitude = -40;
+				this.altitudeTarget = 60;
+				this.cameraTilt = this.tilt = -rad90 * 0.1;
+				this.tiltTarget = rad90 * 0.1;
+				this.velocity = this.velocityTarget = 0;
+				this.alpha = 1;
 
-					this.targetPosition.x = this.cameraPosition.x - Math.sin( this.angle ) * this.targetDistance;
-					this.targetPosition.y = this.cameraPosition.y;
-					this.targetPosition.z = this.cameraPosition.z - Math.cos( this.angle ) * this.targetDistance;
+				this.targetPosition.x = this.cameraPosition.x - Math.sin( this.angle ) * this.targetDistance;
+				this.targetPosition.y = this.cameraPosition.y;
+				this.targetPosition.z = this.cameraPosition.z - Math.cos( this.angle ) * this.targetDistance;
 
-					this.update( true );
-					this.tween( 8 );
-					break;
+				this.update( true );
+				this.tween( 8 );
+				break;
 
 				case 1:
-//					this.fovTarget = 25;
+					//					this.fovTarget = 25;
 					this.velocityTarget = 150;
-//					this.tiltTarget = rad90 * 0.1;
-					this.tween( 1 );
-					break;
+				//					this.tiltTarget = rad90 * 0.1;
+				this.tween( 1 );
+				break;
 
 				case 3:
 					this.fovTarget = 30;
-					this.altitudeTarget = 110;
-//					this.tiltTarget = rad90 * 0.15;
-					this.velocityTarget = 250;
-					this.tween( 4 );
-					break;
+				this.altitudeTarget = 110;
+				//					this.tiltTarget = rad90 * 0.15;
+				this.velocityTarget = 250;
+				this.tween( 4 );
+				break;
 
 				case 7:
 					this.altitudeTarget = 80;
-					this.tiltTarget = rad90 * 0.1;
-					this.velocityTarget = 150;
-					this.tween( 2 );
-					break;
+				this.tiltTarget = rad90 * 0.1;
+				this.velocityTarget = 150;
+				this.tween( 2 );
+				break;
 
 				case 9:
 					this.altitudeTarget = 120;
-					this.tiltTarget = rad90 * 0.15;
-					this.velocityTarget = 200;
-					this.tween( 4 );
-					break;
+				this.tiltTarget = rad90 * 0.15;
+				this.velocityTarget = 200;
+				this.tween( 4 );
+				break;
 
 				case 11:
 					this.altitudeTarget = 80;
-					this.tiltTarget = rad90 * 0.1;
-					this.velocityTarget = 250;
-					this.tween( 4 );
-					break;
+				this.tiltTarget = rad90 * 0.1;
+				this.velocityTarget = 250;
+				this.tween( 4 );
+				break;
 
 				case 13:
 					this.altitudeTarget = 200;
-					this.fovTarget = 40;
-					this.tiltTarget = rad90 * 0.3;
-					this.velocityTarget = 200;
-					this.tween( 4 );
-					break;
+				this.fovTarget = 40;
+				this.tiltTarget = rad90 * 0.3;
+				this.velocityTarget = 200;
+				this.tween( 4 );
+				break;
 
 				case 15:
 					this.altitudeTarget = 200;
-					this.fovTarget = 40;
-					this.tiltTarget = rad90 * 0.2;
-					this.velocityTarget = 200;
-					this.tween( 8 );
-					break;
+				this.fovTarget = 40;
+				this.tiltTarget = rad90 * 0.2;
+				this.velocityTarget = 200;
+				this.tween( 8 );
+				break;
 
 				case 16:
-//					this.altitudeTarget = 80;
-//					this.fovTarget = 30;
-//					this.tiltTarget = rad90 * 0.1;
+					//					this.altitudeTarget = 80;
+					//					this.fovTarget = 30;
+					//					this.tiltTarget = rad90 * 0.1;
 					this.velocityTarget = 0;
-					this.tween( 3 );
-					break;
+				this.tween( 3 );
+				break;
 
 				case 17:
 					this.altitudeTarget = 90;
-					this.fovTarget = 30;
-					this.tiltTarget = rad90 * 0.1;
-					this.velocityTarget = 200;
-					this.tween( 2 );
-					break;
+				this.fovTarget = 30;
+				this.tiltTarget = rad90 * 0.1;
+				this.velocityTarget = 200;
+				this.tween( 2 );
+				break;
 
 				case 18:
 					this.altitudeTarget = 130;
-					this.tiltTarget = rad90 * 0.15;
-					this.velocityTarget = 200;
-					this.tween( 4 );
-					break;
+				this.tiltTarget = rad90 * 0.15;
+				this.velocityTarget = 200;
+				this.tween( 4 );
+				break;
 
 				case 21:
 					this.altitudeTarget = 100;
-					this.fovTarget = 40;
-					this.tiltTarget = rad90 * 0.1;
-					this.velocityTarget = 200;
-					this.tween( 4 );
-					break;
+				this.fovTarget = 40;
+				this.tiltTarget = rad90 * 0.1;
+				this.velocityTarget = 200;
+				this.tween( 4 );
+				break;
 
 				case 22:
 					this.velocityTarget = 100;
-					this.altitudeTarget = 200;
-					this.tiltTarget = rad90 * 0.3;
-					this.tween( 8 );
-					break;
+				this.altitudeTarget = 200;
+				this.tiltTarget = rad90 * 0.3;
+				this.tween( 8 );
+				break;
 			}
 		}
 	},
@@ -472,10 +472,6 @@ LIGHTS.Player.prototype = {
 	tween: function( duration ) {
 
 		this.duration = duration;
-
-		if( ! LIGHTS.releaseBuild )
-			console.log( "CAMERA: vel:", this.velocityTarget, "alt:", this.altitudeTarget, "tilt:", this.tiltTarget, "fov:", this.fovTarget );
-
 		this.altitudeOrigin = this.altitude;
 		this.fovOrigin = this.fov;
 		this.tiltOrigin = this.tilt;
@@ -495,11 +491,11 @@ LIGHTS.SpectrumEvents.prototype = {
 
 	spectrumData:       [],
 
-    // _______________________________________________________________________________________ Constructor
+	// _______________________________________________________________________________________ Constructor
 
 	initialize: function( director ) {
 
-        this.director = director;
+		this.director = director;
 
 		this.displacement = director.terrain.displacement;
 		this.vox = director.vox;
@@ -508,15 +504,15 @@ LIGHTS.SpectrumEvents.prototype = {
 		this.averageSpectrum = [];
 
 		this.createSpectrumData();
-    },
+	},
 
 	createSpectrumData: function() {
 
 		var image = LIGHTS.images.spectrumData,
-			lineLength = 64,
-			imageCanvas = document.createElement( 'canvas' ),
-			imageContext = imageCanvas.getContext( '2d' ),
-			imageData, i, il, j, d, r, g, b, a, line;
+		lineLength = 64,
+		imageCanvas = document.createElement( 'canvas' ),
+		imageContext = imageCanvas.getContext( '2d' ),
+		imageData, i, il, j, d, r, g, b, a, line;
 
 		imageCanvas.width = image.width;
 		imageCanvas.height = image.height;
@@ -542,82 +538,82 @@ LIGHTS.SpectrumEvents.prototype = {
 		}
 	},
 
-    // _______________________________________________________________________________________ Start
+	// _______________________________________________________________________________________ Start
 
-    start: function( target, blur ) {
+	start: function( target, blur ) {
 
-	    this.amplitudeTarget = target;
-	    this.blur = blur;
-	    this.offset = 0;
-	    this.amplitude = 0;
+		this.amplitudeTarget = target;
+		this.blur = blur;
+		this.offset = 0;
+		this.amplitude = 0;
 
-	    var displacementSpectrum = this.displacement.spectrum,
-	        i, il;
+		var displacementSpectrum = this.displacement.spectrum,
+		i, il;
 
 		for( i = 0, il = this.spectrumData[ 0 ].length; i < il; i++ )
-			displacementSpectrum[ i ] = 0;
-    },
+		displacementSpectrum[ i ] = 0;
+	},
 
-    // _______________________________________________________________________________________ Update
+	// _______________________________________________________________________________________ Update
 
-    update: function() {
+	update: function() {
 
-	    if( LIGHTS.Music.phase.index < 23 ) {
+		if( LIGHTS.Music.phase.index < 23 ) {
 
-		    var deltaTime = LIGHTS.deltaTime,
-		        easingMore = deltaTime * 20,
-		        easingLess = deltaTime * 10,
-			    spectrumData = this.spectrumData,
-		        averageSpectrum = this.averageSpectrum,
-		        displacementSpectrum = this.displacement.spectrum,
-		        voxSpectrum = this.vox.spectrum,
-			    offset = this.offset,
-			    frame = Math.floor( LIGHTS.time * 60 ),
-		        spectrum = spectrumData[ frame ],
-		        blur = this.blur,
-		        averageCount = (blur * 2 + 1),
-		        averageMult = this.amplitude / averageCount,
-			    average, i, il, j, jl, index, alpha, disp;
+			var deltaTime = LIGHTS.deltaTime,
+			easingMore = deltaTime * 20,
+			easingLess = deltaTime * 10,
+			spectrumData = this.spectrumData,
+			averageSpectrum = this.averageSpectrum,
+			displacementSpectrum = this.displacement.spectrum,
+			voxSpectrum = this.vox.spectrum,
+			offset = this.offset,
+			frame = Math.floor( LIGHTS.time * 60 ),
+			spectrum = spectrumData[ frame ],
+			blur = this.blur,
+			averageCount = (blur * 2 + 1),
+			averageMult = this.amplitude / averageCount,
+			average, i, il, j, jl, index, alpha, disp;
 
-		    if( frame > 0 ) {
+			if( frame > 0 ) {
 
-			    for( i = 0, il = spectrum.length; i < il; i++ ) {
+				for( i = 0, il = spectrum.length; i < il; i++ ) {
 
-				    average = 0;
+					average = 0;
 
-				    for( j = i - blur, jl = i + blur; j <= jl; j++ ) {
+					for( j = i - blur, jl = i + blur; j <= jl; j++ ) {
 
-					    if( j >= 0 )
-					        average += spectrum[ j % il ];
-					    else
-					        average += spectrum[ (j + il) % il ];
-				    }
+						if( j >= 0 )
+							average += spectrum[ j % il ];
+						else
+							average += spectrum[ (j + il) % il ];
+					}
 
-				    averageSpectrum[ i ] = average * averageMult;
-			    }
+					averageSpectrum[ i ] = average * averageMult;
+				}
 
-			    for( i = 0, il = spectrum.length; i < il; i++ ) {
+				for( i = 0, il = spectrum.length; i < il; i++ ) {
 
 					alpha = i + offset * il;
 					index = Math.floor( alpha );
-				    alpha = alpha - index;
+					alpha = alpha - index;
 
-				    average = averageSpectrum[ index % il ] * (1 - alpha) + averageSpectrum[ (index + 1) % il ] * alpha;
-				    disp = displacementSpectrum[ i ];
+					average = averageSpectrum[ index % il ] * (1 - alpha) + averageSpectrum[ (index + 1) % il ] * alpha;
+					disp = displacementSpectrum[ i ];
 
-				    if( disp > average )
-				        displacementSpectrum[ i ] -= (disp - average) * easingMore;
-				    else
-				        displacementSpectrum[ i ] -= (disp - average) * easingLess;
+					if( disp > average )
+						displacementSpectrum[ i ] -= (disp - average) * easingMore;
+					else
+						displacementSpectrum[ i ] -= (disp - average) * easingLess;
 
-				    voxSpectrum[ i ] = displacementSpectrum[ i ];
-			    }
+					voxSpectrum[ i ] = displacementSpectrum[ i ];
+				}
 
-			    this.offset = (this.offset + LIGHTS.deltaTime) % 1;
-			    this.amplitude -= (this.amplitude - this.amplitudeTarget) * (LIGHTS.deltaTime / 4);
-		    }
-	    }
-    }
+				this.offset = (this.offset + LIGHTS.deltaTime) % 1;
+				this.amplitude -= (this.amplitude - this.amplitudeTarget) * (LIGHTS.deltaTime / 4);
+			}
+		}
+	}
 };
 
 
@@ -1021,55 +1017,55 @@ LIGHTS.VolumeEvents = function( director ) {
 LIGHTS.VolumeEvents.prototype = {
 
 
-    // _______________________________________________________________________________________ Constructor
+	// _______________________________________________________________________________________ Constructor
 
 	initialize: function( director ) {
 
-        this.director = director;
+		this.director = director;
 
 		this.vox = director.vox;
-    },
+	},
 
-    // _______________________________________________________________________________________ Start
+	// _______________________________________________________________________________________ Start
 
-    start: function() {
+	start: function() {
 
-	    this.voxVolume = 0;
-    },
+		this.voxVolume = 0;
+	},
 
-    // _______________________________________________________________________________________ Update
+	// _______________________________________________________________________________________ Update
 
-    update: function() {
+	update: function() {
 
-	    var voxData = LIGHTS.VolumeData.vox,
-		    voxVolume = voxData[ frame ] / 512,
-		    frame = Math.floor( LIGHTS.time * 60 ),
-			voxAverageVolume = 0,
-	        voxPeakEase = 5 * LIGHTS.deltaTime,
-	        i;
+		var voxData = LIGHTS.VolumeData.vox,
+		voxVolume = voxData[ frame ] / 512,
+		frame = Math.floor( LIGHTS.time * 60 ),
+		voxAverageVolume = 0,
+		voxPeakEase = 5 * LIGHTS.deltaTime,
+		i;
 
-	    if( frame > 0 ) {
+		if( frame > 0 ) {
 
-		    for( i = Math.max( 0, frame - 6 ); i <= frame; i++ ) {
+			for( i = Math.max( 0, frame - 6 ); i <= frame; i++ ) {
 
-			    voxAverageVolume += voxData[ i ] / 512;
-		    }
+				voxAverageVolume += voxData[ i ] / 512;
+			}
 
-		    voxAverageVolume /= Math.min( 6, frame );
+			voxAverageVolume /= Math.min( 6, frame );
 
-//		    voxDeltaVolume = voxVolume - voxData[ frame - 3 ] / 512;
+			//		    voxDeltaVolume = voxVolume - voxData[ frame - 3 ] / 512;
 
-		    voxVolume = voxAverageVolume;
+			voxVolume = voxAverageVolume;
 
-		    if( this.voxVolume < voxVolume )
-		        this.voxVolume = voxVolume;
-		    else
+			if( this.voxVolume < voxVolume )
+				this.voxVolume = voxVolume;
+			else
 				this.voxVolume -= (this.voxVolume - voxVolume) * voxPeakEase;
 
-		    // Assign
-		    this.vox.volume = this.voxVolume;
-	    }
-    },
+			// Assign
+			this.vox.volume = this.voxVolume;
+		}
+	},
 };
 
 
@@ -1080,408 +1076,406 @@ LIGHTS.BeatEvents = function( director ) {
 
 LIGHTS.BeatEvents.prototype = {
 
-//    colorsA:    [ 0xFF1561, 0x1a0209 ],
-//    colorsB:    [ 0x1a1002, 0xFF9D14 ],
-//    colorsC:    [ 0xFF1561, 0xFF9D14 ],
-//    colorsA:    [ 0xff2000, 0x1a0300 ],
-//    colorsB:    [ 0x40ff00, 0x031a00 ],
-//    colorsC:    [ 0x40ff00, 0xff2000, 0x0020ff ],
-//    colors:    [ 0x40ff00, 0xff2000, 0x0020ff ],
-//    colors:    [ 0x104000, 0x400800, 0x000840 ],
-    colors:    [ 0x000080, 0x400080, 0x004080 ],
+	//    colorsA:    [ 0xFF1561, 0x1a0209 ],
+	//    colorsB:    [ 0x1a1002, 0xFF9D14 ],
+	//    colorsC:    [ 0xFF1561, 0xFF9D14 ],
+	//    colorsA:    [ 0xff2000, 0x1a0300 ],
+	//    colorsB:    [ 0x40ff00, 0x031a00 ],
+	//    colorsC:    [ 0x40ff00, 0xff2000, 0x0020ff ],
+	//    colors:    [ 0x40ff00, 0xff2000, 0x0020ff ],
+	//    colors:    [ 0x104000, 0x400800, 0x000840 ],
+	colors:    [ 0x000080, 0x400080, 0x004080 ],
 
 
-    // _______________________________________________________________________________________ Constructor
+	// _______________________________________________________________________________________ Constructor
 
 	initialize: function( director ) {
 
-        this.director = director;
+		this.director = director;
 
 		this.terrain = director.terrain;
 		this.displacement = director.terrain.displacement;
-        this.tileManager = director.tileManager;
+		this.tileManager = director.tileManager;
 		this.player = director.player;
 		this.skybox = director.skybox;
 		this.vox = director.vox;
 
-        this.stars = this.tileManager.stars;
-        this.terrainDots = this.tileManager.terrainDots;
-        this.terrainMesh = this.tileManager.terrainMesh;
-        this.balls = this.tileManager.balls;
-        this.cannons = this.tileManager.cannons;
-//        this.tubes = this.tileManager.tubes;
+		this.stars = this.tileManager.stars;
+		this.terrainDots = this.tileManager.terrainDots;
+		this.terrainMesh = this.tileManager.terrainMesh;
+		this.balls = this.tileManager.balls;
+		this.cannons = this.tileManager.cannons;
+		//        this.tubes = this.tileManager.tubes;
 
-        this.beatData = LIGHTS.Music.beatData;
-        this.beats = 0;
-    },
+		this.beatData = LIGHTS.Music.beatData;
+		this.beats = 0;
+	},
 
-    // _______________________________________________________________________________________ Start
+	// _______________________________________________________________________________________ Start
 
-    start: function() {
+	start: function() {
 
-	    if( LIGHTS.Music.startTime > 0 )
-            this.lastTime = LIGHTS.Music.startTime;
-	    else
-	        this.lastTime = this.beatData.start - this.beatData.freq;
+		if( LIGHTS.Music.startTime > 0 )
+			this.lastTime = LIGHTS.Music.startTime;
+		else
+			this.lastTime = this.beatData.start - this.beatData.freq;
 
-        this.nextIncluded = 0;
-        this.included = true;
+		this.nextIncluded = 0;
+		this.included = true;
 
-        this.color = 0;
-	    this.beats = 0;
-    },
+		this.color = 0;
+		this.beats = 0;
+	},
 
 	stop: function() {
 
 		this.vox.stop();
 	},
 
-    // _______________________________________________________________________________________ Update
-
-    update: function() {
-
-        if( this.included  &&  LIGHTS.time > this.beatData.included[ this.nextIncluded ] ) {
-
-            this.nextIncluded++;
-            this.included = (this.nextIncluded < this.beatData.included.length);
-        }
-
-        if( LIGHTS.time >= this.beatData.start  &&  LIGHTS.time < this.beatData.end  &&  LIGHTS.time - this.lastTime > this.beatData.freq ) {
-
-            this.lastTime += this.beatData.freq;
-
-            if( this.beatData.excluded.indexOf( this.lastTime ) == -1 )
-                this.beat();
-        }
-    },
-
-    // _______________________________________________________________________________________ Launch Phase
-
-   /*
-        A1: 0
-        B1: 1,2
-        C1: 3,4
-        B2: 5,6
-        C2: 7,8
-        D1: 9
-        C3: 10,11
-        D2: 12
-        A2: 13
-    */
-
-    launch: function() {
-        console.log(LIGHTS.Music.phase.index);
-
-        switch( LIGHTS.Music.phase.index ) {
-
-            case 0:
-	            this.terrain.reset();
-	            this.terrainMesh.active = false;
-	            this.displacement.active = false;
-	            this.cannons.active = false;
-//	            this.tubes.active = false;
-
-	            this.balls.active = true;
-	            this.balls.launch();
-	            this.stars.active = true;
-	            this.stars.launch();
-	            this.terrainDots.launch();
-                this.terrainDots.active = true;
-	            this.tileManager.apply();
-
-	            this.player.launch();
-	            this.skybox.mesh.visible = false;
-	            this.director.spectrumEvents.start( 1 / 4000, 8 );
-                break;
-
-            case 1:
-	            this.terrainMesh.active = true;
-	            this.terrainMesh.launch();
-	            this.vox.start();
-	            this.nextBeat = 3;
-                break;
-
-            case 2:
-	            this.terrainMesh.launch();
-	            this.terrainDots.launch();
-                this.balls.launch();
-                break;
-
-            case 3:
-	            this.balls.launch();
-	            this.terrainDots.launch();
-	            this.terrainMesh.launch();
-                this.terrainDots.active = true;
-                this.tileManager.apply();
-
-		        this.player.launch();
-	            this.skybox.mesh.visible = true;
-                break;
-
-	        case 4:
-            case 5:
-            case 6:
-                this.terrainDots.launch();
-	            this.balls.launch();
-//	            this.tileManager.apply();
-                break;
-
-	        case 7: // B2
-		        this.balls.launch();
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-	            this.tileManager.apply();
-
-			    this.player.launch();
-		        this.skybox.mesh.visible = false;
-	            break;
-
-	        case 8: // B2b
-		        this.balls.launch();
-		        this.terrainMesh.launch();
-	            this.terrainDots.active = false;
-			    this.tileManager.apply();
-		        break;
-
-	        case 9: // B2c
-		        this.player.launch();
-		        this.balls.launch();
-			    this.tileManager.apply();
-		        break;
-
-	        case 10: // B2d
-	            this.balls.launch();
-		        this.tileManager.apply();
-	            break;
-
-	        case 11: // C2
-		        this.balls.launch();
-		        this.player.launch();
-		        this.terrainMesh.launch();
-		        this.terrainDots.active = true;
-		        this.terrainDots.launch();
-		        this.tileManager.apply();
-
-		        this.skybox.mesh.visible = true;
-		        break;
-
-	        case 12: // C2b
-		        this.balls.launch();
-		        this.terrainDots.launch();
-			    this.tileManager.apply();
-		        break;
-
-	        case 13: // C2c
-	            this.balls.launch();
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-		        this.tileManager.apply();
-
-		        this.player.launch();
-	            break;
-
-	        case 14: // C2d
-		        this.terrainMesh.launch();
-//		        this.tileManager.apply();
-//		        this.tubes.active = true;
-//		        this.tubes.launch();
-//		        this.tileManager.apply();
-		        break;
-
-	        case 15: // D1
-	            this.balls.launch();
-		        this.terrainDots.launch();
-		        this.terrainMesh.launch();
-//		        this.terrainDots.active = false;
-		        this.tileManager.apply();
-
-		        this.displacement.active = true;
-		        this.director.spectrumEvents.start( 1 / 2000, 4 );
-		        this.player.launch();
-	            break;
-
-	        case 16: // S!
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-	            this.balls.launch();
-		        this.tileManager.apply();
-
-		        this.player.launch();
-		        this.skybox.mesh.visible = false;
-	            break;
-
-	        case 17: // C3
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-	            this.balls.launch();
-		        this.cannons.active = true;
-		        this.cannons.launch();
-		        this.tileManager.apply();
-
-		        this.player.launch();
-		        this.displacement.launchFlat2Terrain();
-		        this.skybox.mesh.visible = true;
-	            break;
-
-	        case 18: // C3b
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-	            this.balls.launch();
-
-		        this.player.launch();
-		        this.displacement.active = false;
-		        break;
-
-	        case 19: // C3c
-		        this.cannons.launch();
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-	            this.balls.launch();
-				break;
-
-	        case 20: // C3d
-		        this.terrainMesh.launch();
-		        this.terrainDots.launch();
-	            this.balls.launch();
-				break;
-
-	        case 21: // D2
-		        this.terrainDots.active = true;
-		        this.terrainDots.launch();
-		        this.balls.launch();
-		        this.terrainMesh.launch();
-		        this.tileManager.apply();
-
-		        this.displacement.active = true;
-		        this.director.spectrumEvents.start( 1 / 4000, 4 );
-		        this.player.launch();
-	            break;
-
-	        case 22: // A2
-		        this.skybox.mesh.visible = false;
-		        this.balls.launch();
-		        this.terrainMesh.launch();
-		        this.player.launch();
-				this.terrainDots.launch();
-		        this.cannons.launch();
-		        this.stars.launch();
-		        this.vox.finish();
-		        break;
-
-	        case 23: // END
-		        this.cannons.active = false;
-		        this.terrainDots.active = false;
-		        this.terrainMesh.active = false;
-		        this.balls.active = false;
-		        this.tileManager.apply();
-
-	            LIGHTS.Lights.instance.playHome();
-	            break;
-        }
-    },
-
-    // _______________________________________________________________________________________ Beat
-
-    beat: function() {
-
-        switch( LIGHTS.Music.phase.index ) {
-
-	        case 1:
-				if( this.nextBeat == 0 ) {
-
-					this.balls.beat();
-					this.terrainDots.beat();
-		        }
-		        else if( this.nextBeat == 1 ) {
-					this.vox.launch();
-
-					this.balls.launch();
-					this.terrainDots.launch();
-					this.terrainMesh.launch();
-				    this.balls.active = true;
-					this.terrainMesh.active = true;
-				    this.tileManager.apply();
-					this.player.launch();
-
-			        this.nextBeat--;
-		        }
-		        else {
-
-			        this.nextBeat--;
-		        }
-				break;
-
-	        case 2:
-            case 3:
-            case 4:
-            case 5:
-                this.balls.beat();
-                this.terrainDots.beat();
-                break;
-
-            case 6:
-	            this.balls.beat();
-	            this.terrainDots.beat();
-                this.terrainMesh.beat();
-                break;
-
-            case 7: // B2
-	            this.terrainMesh.beat();
-                break;
-
-	        case 8: // B2b
-	        case 9: // B2c
-	        case 10: // B2d
-		        this.balls.beat();
-		        this.terrainMesh.beat();
-	            break;
-
-	        case 11: // C2
-	        case 12: // C2b
-		        this.balls.beat();
-		        this.terrainMesh.beat();
-		        this.terrainDots.beat();
-	            break;
-
-	        case 13: // C2c
-		        this.terrainDots.beat();
-		        break;
-
-	        case 14: // C2d
-		        this.terrainMesh.beat();
-		        this.terrainDots.beat();
-	            break;
-
-	        case 15: // D1
-//		        this.balls.beat();
-		        this.terrainMesh.beat();
-		        this.terrainDots.beat();
-	            break;
-
-	        case 17: // C3
-	        case 18: // C3b
-	        case 19: // C3c
-	        case 20: // C3d
-	            this.balls.beat();
-	            this.terrainMesh.beat();
-		        this.terrainDots.beat();
-                break;
-
-	        case 21: // D2
-//	            this.displacement.createBump( Math.random() * 40 + 10 );
-		        this.balls.beat();
-		        this.terrainMesh.beat();
-	            this.terrainDots.beat();
-	            break;
-
-	        case 22: // A2
-	            this.terrainDots.beat();
-//		        this.director.view.scene.fog = null;
-//		        this.director.view.scene.fog.setFog( 0.0001 );
-	            break;
-        }
-
-        this.beats++;
-    }
+	// _______________________________________________________________________________________ Update
+
+	update: function() {
+
+		if( this.included  &&  LIGHTS.time > this.beatData.included[ this.nextIncluded ] ) {
+
+			this.nextIncluded++;
+			this.included = (this.nextIncluded < this.beatData.included.length);
+		}
+
+		if( LIGHTS.time >= this.beatData.start  &&  LIGHTS.time < this.beatData.end  &&  LIGHTS.time - this.lastTime > this.beatData.freq ) {
+
+			this.lastTime += this.beatData.freq;
+
+			if( this.beatData.excluded.indexOf( this.lastTime ) == -1 )
+				this.beat();
+		}
+	},
+
+	// _______________________________________________________________________________________ Launch Phase
+
+	/*
+A1: 0
+B1: 1,2
+C1: 3,4
+B2: 5,6
+C2: 7,8
+D1: 9
+C3: 10,11
+D2: 12
+A2: 13
+*/
+
+launch: function() {
+					switch( LIGHTS.Music.phase.index ) {
+
+						case 0:
+							this.terrain.reset();
+							this.terrainMesh.active = false;
+							this.displacement.active = false;
+							this.cannons.active = false;
+							//	            this.tubes.active = false;
+
+							this.balls.active = true;
+							this.balls.launch();
+							this.stars.active = true;
+							this.stars.launch();
+							this.terrainDots.launch();
+							this.terrainDots.active = true;
+							this.tileManager.apply();
+
+							this.player.launch();
+							this.skybox.mesh.visible = false;
+							this.director.spectrumEvents.start( 1 / 4000, 8 );
+							break;
+
+						case 1:
+							this.terrainMesh.active = true;
+							this.terrainMesh.launch();
+							this.vox.start();
+							this.nextBeat = 3;
+							break;
+
+						case 2:
+							this.terrainMesh.launch();
+							this.terrainDots.launch();
+							this.balls.launch();
+							break;
+
+							case 3:
+							this.balls.launch();
+						this.terrainDots.launch();
+						this.terrainMesh.launch();
+						this.terrainDots.active = true;
+						this.tileManager.apply();
+
+						this.player.launch();
+						this.skybox.mesh.visible = true;
+						break;
+
+						case 4:
+							case 5:
+							case 6:
+							this.terrainDots.launch();
+						this.balls.launch();
+						//	            this.tileManager.apply();
+						break;
+
+						case 7: // B2
+							this.balls.launch();
+						this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.tileManager.apply();
+
+						this.player.launch();
+						this.skybox.mesh.visible = false;
+						break;
+
+						case 8: // B2b
+							this.balls.launch();
+						this.terrainMesh.launch();
+						this.terrainDots.active = false;
+						this.tileManager.apply();
+						break;
+
+						case 9: // B2c
+							this.player.launch();
+						this.balls.launch();
+						this.tileManager.apply();
+						break;
+
+						case 10: // B2d
+							this.balls.launch();
+						this.tileManager.apply();
+						break;
+
+						case 11: // C2
+							this.balls.launch();
+						this.player.launch();
+						this.terrainMesh.launch();
+						this.terrainDots.active = true;
+						this.terrainDots.launch();
+						this.tileManager.apply();
+
+						this.skybox.mesh.visible = true;
+						break;
+
+						case 12: // C2b
+							this.balls.launch();
+						this.terrainDots.launch();
+						this.tileManager.apply();
+						break;
+
+						case 13: // C2c
+							this.balls.launch();
+						this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.tileManager.apply();
+
+						this.player.launch();
+						break;
+
+						case 14: // C2d
+							this.terrainMesh.launch();
+						//		        this.tileManager.apply();
+						//		        this.tubes.active = true;
+						//		        this.tubes.launch();
+						//		        this.tileManager.apply();
+						break;
+
+						case 15: // D1
+							this.balls.launch();
+						this.terrainDots.launch();
+						this.terrainMesh.launch();
+						//		        this.terrainDots.active = false;
+						this.tileManager.apply();
+
+						this.displacement.active = true;
+						this.director.spectrumEvents.start( 1 / 2000, 4 );
+						this.player.launch();
+						break;
+
+						case 16: // S!
+							this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.balls.launch();
+						this.tileManager.apply();
+
+						this.player.launch();
+						this.skybox.mesh.visible = false;
+						break;
+
+						case 17: // C3
+							this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.balls.launch();
+						this.cannons.active = true;
+						this.cannons.launch();
+						this.tileManager.apply();
+
+						this.player.launch();
+						this.displacement.launchFlat2Terrain();
+						this.skybox.mesh.visible = true;
+						break;
+
+						case 18: // C3b
+							this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.balls.launch();
+
+						this.player.launch();
+						this.displacement.active = false;
+						break;
+
+						case 19: // C3c
+							this.cannons.launch();
+						this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.balls.launch();
+						break;
+
+						case 20: // C3d
+							this.terrainMesh.launch();
+						this.terrainDots.launch();
+						this.balls.launch();
+						break;
+
+						case 21: // D2
+							this.terrainDots.active = true;
+						this.terrainDots.launch();
+						this.balls.launch();
+						this.terrainMesh.launch();
+						this.tileManager.apply();
+
+						this.displacement.active = true;
+						this.director.spectrumEvents.start( 1 / 4000, 4 );
+						this.player.launch();
+						break;
+
+						case 22: // A2
+							this.skybox.mesh.visible = false;
+						this.balls.launch();
+						this.terrainMesh.launch();
+						this.player.launch();
+						this.terrainDots.launch();
+						this.cannons.launch();
+						this.stars.launch();
+						this.vox.finish();
+						break;
+
+						case 23: // END
+							this.cannons.active = false;
+						this.terrainDots.active = false;
+						this.terrainMesh.active = false;
+						this.balls.active = false;
+						this.tileManager.apply();
+
+						LIGHTS.Lights.instance.playHome();
+						break;
+					}
+},
+
+// _______________________________________________________________________________________ Beat
+
+beat: function() {
+
+	switch( LIGHTS.Music.phase.index ) {
+
+		case 1:
+			if( this.nextBeat == 0 ) {
+
+			this.balls.beat();
+			this.terrainDots.beat();
+		}
+		else if( this.nextBeat == 1 ) {
+			this.vox.launch();
+
+			this.balls.launch();
+			this.terrainDots.launch();
+			this.terrainMesh.launch();
+			this.balls.active = true;
+			this.terrainMesh.active = true;
+			this.tileManager.apply();
+			this.player.launch();
+
+			this.nextBeat--;
+		}
+		else {
+
+			this.nextBeat--;
+		}
+		break;
+
+		case 2:
+			case 3:
+			case 4:
+			case 5:
+			this.balls.beat();
+		this.terrainDots.beat();
+		break;
+
+		case 6:
+			this.balls.beat();
+		this.terrainDots.beat();
+		this.terrainMesh.beat();
+		break;
+
+		case 7: // B2
+			this.terrainMesh.beat();
+		break;
+
+		case 8: // B2b
+			case 9: // B2c
+			case 10: // B2d
+			this.balls.beat();
+		this.terrainMesh.beat();
+		break;
+
+		case 11: // C2
+			case 12: // C2b
+			this.balls.beat();
+		this.terrainMesh.beat();
+		this.terrainDots.beat();
+		break;
+
+		case 13: // C2c
+			this.terrainDots.beat();
+		break;
+
+		case 14: // C2d
+			this.terrainMesh.beat();
+		this.terrainDots.beat();
+		break;
+
+		case 15: // D1
+			//		        this.balls.beat();
+			this.terrainMesh.beat();
+		this.terrainDots.beat();
+		break;
+
+		case 17: // C3
+			case 18: // C3b
+			case 19: // C3c
+			case 20: // C3d
+			this.balls.beat();
+		this.terrainMesh.beat();
+		this.terrainDots.beat();
+		break;
+
+		case 21: // D2
+			//	            this.displacement.createBump( Math.random() * 40 + 10 );
+			this.balls.beat();
+		this.terrainMesh.beat();
+		this.terrainDots.beat();
+		break;
+
+		case 22: // A2
+			this.terrainDots.beat();
+		//		        this.director.view.scene.fog = null;
+		//		        this.director.view.scene.fog.setFog( 0.0001 );
+		break;
+	}
+
+	this.beats++;
+}
 };
 
