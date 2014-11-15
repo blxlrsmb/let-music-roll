@@ -1,4 +1,3 @@
-
 LIGHTS.GUI = function( go ) {
   this.initialize( go );
 };

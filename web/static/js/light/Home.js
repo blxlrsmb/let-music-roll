@@ -109,6 +109,25 @@ LIGHTS.Home.prototype = {
       this.circles.push( new LIGHTS.HomeCircle( mesh, material ) );
       this.scene.addChild( mesh );
     }
+    // Upload
+    texture = new THREE.Texture( this.images.uploadButton );
+    texture.needsUpdate = true;
+
+    this.uploadMaterial = new THREE.MeshBasicMaterial( {
+      map:            texture,
+      color:          0x000000,
+      opacity:        1 - this.buttonOpacity,
+      transparent:    true
+    } );
+
+    this.uploadColor = this.uploadMaterial.color;
+
+    this.upload = new THREE.Mesh( new THREE.PlaneGeometry( 128, 128 ), this.uploadMaterial );
+    this.upload.position.y = this.buttonY;
+    this.upload.position.z = 600;
+    this.uploadRot = this.upload.rotation;
+    this.uploadRot.y = rad180;
+    this.scene.addChild( this.upload );
 
     // Loading
     texture = new THREE.Texture( this.images.loadingButton );
@@ -270,7 +289,8 @@ LIGHTS.Home.prototype = {
     this.isClosing = false;
     this.isOpening = true;
     this.isLoaded = false;
-    this.isLoading = true;
+    this.isLoading = false;
+    this.hasUploaded = false;
     this.alpha = 0;
     this.delay = 1;
     this.introDelay = 1000;
@@ -384,9 +404,22 @@ LIGHTS.Home.prototype = {
         this.alpha = 0;
     } else if( this.isIntro ) {
       // Intro
+      console.log(this.delay)
       if( this.delay < 0 ) {
+        console.log(this.hasUploaded, this.isLoading)
+        if( !this.hasUploaded ) {
+          this.alpha += deltaTime * 2;
 
-        if( this.isLoading ) {
+          if( this.alpha >= 1 ) {
+
+            this.uploadScale = 1;
+            this.isIntro = false;
+            this.alpha = 1;
+          }
+          this.uploadRot.y = rad180 * (this.alpha - 1);
+        }
+        else if( this.isLoading ) {
+          console.log(this.alpha)
 
           // Loading
           if( this.alpha < 1 ) {
@@ -396,6 +429,7 @@ LIGHTS.Home.prototype = {
             if( this.alpha >= 1 )
               this.alpha = 1;
 
+            this.uploadRot.y = rad180 * this.alpha;
             this.loadingRot.y = rad180 * (this.alpha - 1);
 
             if( this.isLoaded && this.alpha == 1 ) {
@@ -422,11 +456,45 @@ LIGHTS.Home.prototype = {
         }
       }
       else {
-
         this.delay -= deltaTime;
       }
     }
     else {
+      console.log(this.alpha);
+      if ( this.isLoading ) {
+        // Loading
+        if( this.alpha < 1 ) {
+
+          this.alpha += deltaTime * 2;
+
+          if( this.alpha >= 1 )
+            this.alpha = 1;
+
+          this.uploadRot.y = rad180 * this.alpha;
+          this.loadingRot.y = rad180 * (this.alpha - 1);
+
+          if( this.isLoaded && this.alpha == 1 ) {
+
+            this.isLoading = false;
+            this.alpha = 0;
+          }
+        }
+      }
+      else if (!this.isReplay) {
+
+        // Intro Play
+        this.alpha += deltaTime * 2;
+
+        if( this.alpha >= 1 ) {
+
+          this.playScale = 1;
+          this.isIntro = false;
+          this.alpha = 1;
+        }
+
+        this.loadingRot.y = rad180 * this.alpha;
+        this.playRot.y = rad180 * (this.alpha - 1);
+      }
 
       // Home
       if( this.isReplay ) {
@@ -530,23 +598,29 @@ LIGHTS.Home.prototype = {
         }
         else {
 
-          // Play Button
           hit = input.pointerX * input.pointerX + (input.pointerY + buttonY ) * (input.pointerY + buttonY );
 
           if( hit < this.hitRadius2 || input.keyReturn ) {
+            if ( this.hasUploaded )
+            {
+              // Play Button
 
-            this.playScale -= (this.playScale - this.mouseOverScale) * deltaTime * 8;
-            this.playMaterial.opacity -= (this.playMaterial.opacity - 1) * deltaTime * 8;
-            document.body.style.cursor = 'pointer';
+              this.playScale -= (this.playScale - this.mouseOverScale) * deltaTime * 8;
+              this.playMaterial.opacity -= (this.playMaterial.opacity - 1) * deltaTime * 8;
+              document.body.style.cursor = 'pointer';
 
-            if( LIGHTS.Input.mouseDown || input.keyReturn ) {
+              if( LIGHTS.Input.mouseDown || input.keyReturn ) {
 
-              document.body.style.cursor = 'auto';
-              this.isClosing = true;
-              this.alpha = 0;
+                document.body.style.cursor = 'auto';
+                this.isClosing = true;
+                this.alpha = 0;
+              }
             }
 
           } else {
+            this.uploadScale -= (this.uploadScale - 1) * deltaTime * 8;
+            this.uploadMaterial.opacity -= (this.uploadMaterial.opacity - (1 - this.buttonOpacity)) * deltaTime * 8;
+            document.body.style.cursor = 'default';
 
             this.playScale -= (this.playScale - 1) * deltaTime * 8;
             this.playMaterial.opacity -= (this.playMaterial.opacity - (1 - this.buttonOpacity)) * deltaTime * 8;
@@ -559,6 +633,7 @@ LIGHTS.Home.prototype = {
 
     this.loadingColor.r = this.loadingColor.g = this.loadingColor.b = Math.sin( this.loadingRot.y + rad90 );
     this.playColor.r = this.playColor.g = this.playColor.b = Math.sin( this.playRot.y + rad90 );
+    this.uploadColor.r = this.uploadColor.g = this.uploadColor.b = Math.sin( this.uploadRot.y + rad90 );
 
     if( this.isReplay ) {
       this.replayColor.r = this.replayColor.g = this.replayColor.b = Math.sin( this.replayRot.y + rad90 );

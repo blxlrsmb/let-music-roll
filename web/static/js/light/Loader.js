@@ -26,8 +26,12 @@ LIGHTS.Loader.prototype = {
     LIGHTS.Loader.prototype.instance = this;
 
     this.avatarsLoaded = false;
-    this.loadConfig();
-    this.loadMusic();
+  },
+
+  doLoad: function(music, config) {
+    LIGHTS.Lights.instance.home.isLoading = true;
+    this.loadConfig(config);
+    this.loadMusic(music);
   },
 
   loadConfig: function(item) {
@@ -44,21 +48,21 @@ LIGHTS.Loader.prototype = {
 
   // _______________________________________________________________________________________ Load Tweets
 
-  loadMusic: function() {
+  loadMusic: function(music) {
 
     var audio = document.createElement('audio'),
     musicSrc = null;
-
-    if( audio.canPlayType ) {
-
+    if (music)
+      musicSrc = music
+    else if( audio.canPlayType ) {
       if( audio.canPlayType( 'audio/mpeg' ) != "" )
         musicSrc = LIGHTS.Config.musicMP3;
       else if ( audio.canPlayType( 'audio/ogg; codecs="vorbis"' ) != "" )
         musicSrc = LIGHTS.Config.musicOGG;
     }
 
+    console.log(musicSrc);
     if( musicSrc !== null ) {
-
       audio.setAttribute( 'preload', 'auto' );
       audio.setAttribute( 'src', musicSrc );
       this.canPlayThroughListener = bind( this, this.loadTweets );

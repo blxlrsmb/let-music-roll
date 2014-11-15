@@ -8,6 +8,7 @@ LIGHTS.Config = {
 
 		loadingButton:      'images/home/loadingButton.png',
 		playButton:         'images/home/playButton.png',
+		uploadButton:       'images/home/uploadButton.png',
 		bokeh:              'images/home/bokeh.png'
 	},
 
