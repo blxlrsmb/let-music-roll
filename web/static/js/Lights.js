@@ -23,16 +23,9 @@ LIGHTS.GUI.prototype = {
   setup: function() {
 
     this.logo = document.getElementById( 'lights_logo' );
-    this.hey = document.getElementById( 'lights_helloenjoy' );
-    this.share = document.getElementById( 'lights_share' );
-    this.credits = document.getElementById( 'lights_credits' );
 
-    this.logo.style.visibility =
-      this.hey.style.visibility =
-      this.share.style.visibility =
-      this.credits.style.visibility = 'hidden';
+    this.logo.style.visibility = 'hidden';
 
-    this.share.style.display = 'none';
   },
 
   setupGo: function() {
@@ -63,28 +56,13 @@ LIGHTS.GUI.prototype = {
 
     if( alpha > 0 ) {
 
-      this.logo.style.visibility =
-        this.hey.style.visibility =
-        this.info.style.visibility =
-        this.share.style.visibility =
-        this.credits.style.visibility = 'visible';
+      this.logo.style.visibility = 'visible';
 
       this.setOpacity( this.logo, Math.max( 0, Math.min( 1, alpha * 2 ) ) );
-      this.setOpacity( this.hey, Math.max( 0, Math.min( 1, alpha * 2 - 0.5 ) ) );
-      this.setOpacity( this.info, Math.max( 0, Math.min( 1, alpha * 2 - 0.25 ) ) );
-      this.setOpacity( this.share, Math.max( 0, Math.min( 1, alpha * 2 - 1 ) ) );
-      this.setOpacity( this.credits, Math.max( 0, Math.min( 1, alpha * 2 - 0.75 ) ) );
-
-      this.share.style.display = 'inline';
-      this.share.style.left = this.shareLeft + 'px';
     }
     else {
 
-      this.logo.style.visibility =
-        this.hey.style.visibility =
-        this.info.style.visibility =
-        this.share.style.visibility =
-        this.credits.style.visibility = 'hidden';
+      this.logo.style.visibility = 'hidden';
     }
   },
 
@@ -97,8 +75,8 @@ LIGHTS.GUI.prototype = {
   }
 };
 
-//LIGHTS.releaseBuild = true;
-LIGHTS.releaseBuild = false;
+LIGHTS.releaseBuild = true;
+//LIGHTS.releaseBuild = false;
 
 LIGHTS.time = 0;
 LIGHTS.deltaTime = 0;

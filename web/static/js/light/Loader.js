@@ -61,7 +61,6 @@ LIGHTS.Loader.prototype = {
         musicSrc = LIGHTS.Config.musicOGG;
     }
 
-    console.log(musicSrc);
     if( musicSrc !== null ) {
       audio.setAttribute( 'preload', 'auto' );
       audio.setAttribute( 'src', musicSrc );

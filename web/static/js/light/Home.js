@@ -116,7 +116,7 @@ LIGHTS.Home.prototype = {
     this.uploadMaterial = new THREE.MeshBasicMaterial( {
       map:            texture,
       color:          0x000000,
-      opacity:        1 - this.buttonOpacity,
+      opacity:        1,
       transparent:    true
     } );
 
@@ -382,7 +382,6 @@ LIGHTS.Home.prototype = {
       this.alpha += deltaTime * 0.5;
 
       if( this.alpha >= 1 ) {
-
         this.playScale = 1;
         this.replayScale = 1;
         this.tweetScale = 1;
@@ -404,9 +403,7 @@ LIGHTS.Home.prototype = {
         this.alpha = 0;
     } else if( this.isIntro ) {
       // Intro
-      console.log(this.delay)
       if( this.delay < 0 ) {
-        console.log(this.hasUploaded, this.isLoading)
         if( !this.hasUploaded ) {
           this.alpha += deltaTime * 2;
 
@@ -419,7 +416,6 @@ LIGHTS.Home.prototype = {
           this.uploadRot.y = rad180 * (this.alpha - 1);
         }
         else if( this.isLoading ) {
-          console.log(this.alpha)
 
           // Loading
           if( this.alpha < 1 ) {
@@ -460,7 +456,6 @@ LIGHTS.Home.prototype = {
       }
     }
     else {
-      console.log(this.alpha);
       if ( this.isLoading ) {
         // Loading
         if( this.alpha < 1 ) {
@@ -619,7 +614,7 @@ LIGHTS.Home.prototype = {
 
           } else {
             this.uploadScale -= (this.uploadScale - 1) * deltaTime * 8;
-            this.uploadMaterial.opacity -= (this.uploadMaterial.opacity - (1 - this.buttonOpacity)) * deltaTime * 8;
+            this.uploadMaterial.opacity -= (this.uploadMaterial.opacity - 1) * deltaTime * 8;
             document.body.style.cursor = 'default';
 
             this.playScale -= (this.playScale - 1) * deltaTime * 8;
