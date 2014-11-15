@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sat Nov 15 18:45:00 2014 +0800
+# $Date: Sat Nov 15 19:02:28 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import sys
@@ -9,6 +9,7 @@ import argparse
 import os
 import imp
 import tempfile
+import gc
 
 import subprocess
 
@@ -22,9 +23,30 @@ from lmr.utils.fs import TempDir
 from lmr.utils.iteration import pimap
 from itertools import imap, izip
 
+from multiprocessing import Pool, Process, Queue
+
+import dill
+
 import logging
 logger = logging.getLogger(__name__)
 
+def run_dilled_func(func_data, result_queue):
+    func = dill.loads(func_data)
+    result_queue.put(func())
+
+def single_worker_apply(func):
+    func_data = dill.dumps(func)
+    queue = Queue()
+    proc = Process(target=run_dilled_func, args=(func_data, queue))
+    proc.start()
+    result = queue.get()
+    proc.terminate()
+    proc.join()
+    return result
+
+
+def analyse_worker(server, x, fs):
+    return single_worker_apply(lambda: server._analyze_music(x, fs))
 
 class MusicAnalyseServer(object):
     def __init__(self, arousal_model, valence_model, feature_list,
@@ -58,6 +80,14 @@ class MusicAnalyseServer(object):
             wavfile_path = os.path.join(tempdir, filename + '.wav')
 
             x, fs = self.read_audio(audio_file, wavfile_path)
+
+            # FIXME: unknown memory leak.
+            # temporally fixed by computing in another process
+            # and turn it off to release memories
+            result = analyse_worker(self, x, fs)
+
+            return jsonify(result)
+
             return jsonify(self._analyze_music(x, fs))
 
 
@@ -80,8 +110,10 @@ class MusicAnalyseServer(object):
         cur = 0.0
         assert len(timing) == len(arousals)
 
-        return [(t, dict(arousal=arousal, valence=valence))
+        ret = [(t, dict(arousal=arousal, valence=valence))
                 for t, arousal, valence in zip(timing, arousals, valences)]
+        gc.collect()
+        return ret
 
 
     def _load_model(self, model):
@@ -92,7 +124,7 @@ class MusicAnalyseServer(object):
     def _extract_features(self, x, fs):
         Xs = []
         for feat_name, X in izip(self.feature_list,
-                     imap(lambda feat_name: extract_feature(
+                     pimap(lambda feat_name: extract_feature(
                          feat_name, self.ws, self.st, x, fs),
                      self.feature_list)):
             logger.info('feature `{}\' generated'.format(feat_name))
