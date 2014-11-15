@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 03:37:32 2014 +0800
+# $Date: Sun Nov 16 03:53:01 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -73,7 +73,9 @@ class AnalyseError(Exception):
 
 class MusicAnalyseServer(object):
     def __init__(self, arousal_model, valence_model, feature_list,
-                 temp_dir, precomputed_results_dir, port, ws=0.5, st=0.5):
+                 temp_dir, precomputed_results_dir, port,
+                 animation_config_gen_method,
+                 ws=0.5, st=0.5):
         ''':param ws, st: (window_size, stride)'''
         self.app = Flask(__name__)
         self.arousal_model = self._load_model(arousal_model)
@@ -86,7 +88,7 @@ class MusicAnalyseServer(object):
         self.port = port
         self.ws = ws
         self.st = st
-
+        self.animation_gen_method = animation_config_gen_method
         self.build_app()
 
     def _hash_by_file_content(self, path):
@@ -122,7 +124,20 @@ class MusicAnalyseServer(object):
 
         @app.route('/api/get_animation_config_by_hash', methods=['GET'])
         def get_animation_config_by_hash():
-            pass
+            hash_idx = request.values.get('hash_idx', None)
+            if hash_idx is None:
+                ret = dict(status='error',
+                           detail='No hash_idx param found.')
+            else:
+                analyse_result = self.get_analyse_result_by_hash(hash_idx)
+                if analyse_result is None:
+                    ret = dict(
+                        status='error',
+                        detail='Unable to find result for hash {}'.format(
+                            hash_idx))
+                else:
+                    ret = self.animation_gen_method(analyse_result)
+            return jsonify(ret)
 
         @app.route('/api/gen_animation_config_by_audio', methods=['POST'])
         def gen_animation_config_by_audio():
@@ -334,7 +349,8 @@ def main():
         feature_list=read_by_line(config.feature_list_file),
         temp_dir=config.temp_dir, port=config.port,
         precomputed_results_dir=config.precomputed_results_dir,
-        ws=config.ws, st=config.st)
+        ws=config.ws, st=config.st,
+        animation_config_gen_method=config.animation_config_gen_method)
 
     server.app.debug = True
     server.run()

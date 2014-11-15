@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: server-conf.py
-# $Date: Sun Nov 16 01:42:16 2014 +0800
+# $Date: Sun Nov 16 03:44:26 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 port = 7007
@@ -17,5 +17,17 @@ ws = 0.5
 st = 0.5
 
 precomputed_results_dir = 'precomputed'
+
+
+def _gen_anim_conf(analyse_result):
+    # XXX: fake data
+    import json
+
+    with open('../web/static/api/fetch/test.json') as f:
+        return json.load(f)
+
+
+animation_config_gen_method = _gen_anim_conf
+
 
 # vim: foldmethod=marker
