@@ -1,12 +1,12 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: server-conf.py
-# $Date: Sat Nov 15 18:43:33 2014 +0800
+# $Date: Sun Nov 16 00:47:34 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 port = 7007
-arousal_model = './model_store/arousal.lr.mdl'
-valence_model = './model_store/valence.lr.mdl'
+arousal_model = './model_store/arousal.gbr.mdl'
+valence_model = './model_store/valence.gbr.mdl'
 feature_list_file = './config/feature.list'
 temp_dir = './tmp'
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sat Nov 15 21:48:31 2014 +0800
+# $Date: Sun Nov 16 01:27:45 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -12,6 +12,7 @@ import imp
 import tempfile
 import gc
 
+import operator
 import subprocess
 
 import librosa
@@ -21,7 +22,7 @@ import numpy as np
 from lmr.features import extract as extract_feature
 from lmr.utils import wavread, read_by_line, serial, ProgressReporter
 from lmr.utils.fs import TempDir
-from lmr.utils import concurrency
+from lmr.utils.concurrency import parallel
 
 from lmr.utils.iteration import pimap
 from itertools import imap, izip
@@ -50,6 +51,19 @@ def single_worker_apply(func):
 
 def analyse_worker(server, x, fs):
     return single_worker_apply(lambda: server._analyze_music(x, fs))
+
+def single_worker_call_member_method(obj, method_name, *args, **kwargs):
+    return single_worker_apply(
+        lambda: getattr(obj, method_name)(*args, **kwargs))
+
+class bind(object):
+    def __init__(self, func, *args, **kwargs):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+
+    def __call__(self):
+        return self.func(*self.args, **self.kwargs)
 
 class MusicAnalyseServer(object):
     def __init__(self, arousal_model, valence_model, feature_list,
@@ -82,24 +96,41 @@ class MusicAnalyseServer(object):
 
             wavfile_path = os.path.join(tempdir, filename + '.wav')
 
+            logger.info('loading audio ...')
             x, fs = self.read_audio(audio_file, wavfile_path)
+            logger.info('audio loaded.')
 
             duration = len(x) / float(fs)
-            if duration >= 4 * 60:
-                return dict(status='error',
-                            message='music too long. analyse rejected.')
+            if duration >= 5 * 60:
+                return jsonify(dict(status='error',
+                            message='music too long. analyse rejected.'))
 
             # FIXME: unknown memory leak.
             # temporally fixed by computing in another process
             # and turn it off to release memories
-            result = analyse_worker(self, x, fs)
+
+#             logger.info('analysing emotion ...')
+#             emotion_series = single_worker_call_member_method(
+#                 self, '_emotion_analyse', x, fs)
+#             logger.info('analysing beats ...')
+#             beat_series = single_worker_call_member_method(
+#                 self, '_beat_analyses', x, fs)
+
+            emotion_series, beat_series = parallel(
+                bind(single_worker_call_member_method,
+                    self, '_emotion_analyse', x, fs),
+                bind(single_worker_call_member_method,
+                    self, '_beat_analyses', x, fs))
+
+
+            result = list(sorted(emotion_series + beat_series,
+                           key=operator.itemgetter(0)))
+
+#             result = analyse_worker(self, x, fs)
 
             return jsonify(dict(
                 status='success',
                 data=result))
-
-#             from IPython import embed; embed()
-#             return jsonify(result)
 
 
     def xrangef(self, begin, end, step):
@@ -114,8 +145,14 @@ class MusicAnalyseServer(object):
     def _emotion_analyse(self, x, fs):
         X = self._extract_features(x, fs)
 
+        logger.info('predicting arousal using model `{}\''.format(
+            self.arousal_model.__class__.__name__))
         arousals = self.arousal_model.predict(X)
+
+        logger.info('predicting valence using model `{}\''.format(
+            self.valence_model.__class__.__name__))
         valences = self.valence_model.predict(X)
+
         timing = self.rangef(0, len(x) / float(fs), self.st)
         cur = 0.0
         assert len(timing) == len(arousals)
@@ -126,24 +163,22 @@ class MusicAnalyseServer(object):
         return ret
 
     def _beat_analyses(self, x, fs):
-        print 1
-        print len(x), fs
         y_harmonic, y_percussive = librosa.effects.hpss(x)
 
-        print 2
         temp, beats = librosa.beat.beat_track(
             y=y_percussive, sr=fs, hop_length=64)
-        print 3
         beats_time = librosa.frames_to_time(beats, sr=fs, hop_length=64)
-        print 4
-        from IPython import embed; embed()
+        beats_time = [(t, dict(beat=1)) for t in beats_time]
         return beats_time
 
     def _analyze_music(self, x, fs):
-#         emotion_series = self._emotion_analyse(x, fs)
+        logger.info('analysing emotion ...')
+        emotion_series = self._emotion_analyse(x, fs)
+        logger.info('analysing beats...')
         beat_series = self._beat_analyses(x, fs)
-        return beat_series
-        return list(sorted(emotion_series + beat_series))
+
+        return list(sorted(emotion_series + beat_series,
+                           key=operator.itemgetter(0)))
 
     def _load_model(self, model):
         if isinstance(model, basestring):
@@ -155,7 +190,7 @@ class MusicAnalyseServer(object):
         for feat_name, X in izip(self.feature_list,
                      pimap(lambda feat_name: extract_feature(
                          feat_name, self.ws, self.st, x, fs),
-                     self.feature_list)):
+                     self.feature_list, nr_proc=2)):
             logger.info('feature `{}\' generated'.format(feat_name))
             Xs.append(X)
         return np.hstack(Xs)
@@ -170,10 +205,10 @@ class MusicAnalyseServer(object):
         try:
             return wavread(fname)
         except:
-            pass
+            logger.info('direct read of `{}\' failed'.format(fname))
 
         cmd =  ['ffmpeg', '-i', fname, temp_wavfile]
-        print cmd
+        logger.info(cmd)
         subprocess.check_call(cmd)
 
         return wavread(temp_wavfile)
