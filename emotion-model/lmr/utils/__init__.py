@@ -1,10 +1,12 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: __init__.py
-# $Date: Sat Nov 15 17:15:54 2014 +0800
+# $Date: Sat Nov 15 17:20:18 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import sys
+
+import numpy as np
 
 from bregman.suite import wavread as _wavread
 from contextlib import contextmanager

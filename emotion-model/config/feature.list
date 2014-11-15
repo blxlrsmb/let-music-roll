@@ -4,7 +4,6 @@ hchroma
 mfcc
 chroma
 lcqft
-stft
 lpower
 cqft
 dbpower
