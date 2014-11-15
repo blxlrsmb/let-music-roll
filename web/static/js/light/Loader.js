@@ -21,7 +21,7 @@ LIGHTS.Loader.prototype = {
   initialize: function( callback ) {
 
     this.callback = callback;
-    this.api = new LIGHTS.API('api');
+    this.api = new LIGHTS.API('/api');
 
     LIGHTS.Loader.prototype.instance = this;
 

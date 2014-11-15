@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 03:53:01 2014 +0800
+# $Date: Sun Nov 16 04:09:59 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -136,7 +136,20 @@ class MusicAnalyseServer(object):
                         detail='Unable to find result for hash {}'.format(
                             hash_idx))
                 else:
-                    ret = self.animation_gen_method(analyse_result)
+                    try:
+                        animation_config = self.animation_gen_method(
+                            analyse_result)
+                        if animation_config is None:
+                            ret = dict(
+                                status='error',
+                                detail='Unable to generate animation config')
+                    except Exception as e:
+                        ret = dict(
+                            status='error',
+                            detail=e.message)
+                    else:
+                        ret = dict(status='success',
+                                   data=animation_config)
             return jsonify(ret)
 
         @app.route('/api/gen_animation_config_by_audio', methods=['POST'])
