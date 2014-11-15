@@ -12,50 +12,50 @@ LIGHTS.Loader = function( callback ) {
 
 LIGHTS.Loader.prototype = {
 
-    // _______________________________________________________________________________________ Vars
+  // _______________________________________________________________________________________ Vars
 
   totalTweets:    9,
 
-    // _______________________________________________________________________________________ Constructor
+  // _______________________________________________________________________________________ Constructor
 
   initialize: function( callback ) {
 
     this.callback = callback;
-        this.api = new LIGHTS.API('api');
+    this.api = new LIGHTS.API('api');
 
     LIGHTS.Loader.prototype.instance = this;
 
     this.avatarsLoaded = false;
-        this.loadConfig();
+    this.loadConfig();
     this.loadMusic();
   },
 
-    loadConfig: function(item) {
+  loadConfig: function(item) {
     if (!item)
-      item = 'test.json'
-    this.loadData(item)
-    },
+      item = 'test.json';
+    this.loadData(item);
+  },
 
   loadData: function(item) {
     this.api.fetch(item, function(data) {
-      LIGHTS.Music.loadPhase(data)
-    })
+      LIGHTS.Music.loadPhase(data);
+    });
   },
 
-    // _______________________________________________________________________________________ Load Tweets
+  // _______________________________________________________________________________________ Load Tweets
 
   loadMusic: function() {
 
     var audio = document.createElement('audio'),
-      musicSrc = null;
+    musicSrc = null;
 
-      if( audio.canPlayType ) {
+    if( audio.canPlayType ) {
 
       if( audio.canPlayType( 'audio/mpeg' ) != "" )
         musicSrc = LIGHTS.Config.musicMP3;
-        else if ( audio.canPlayType( 'audio/ogg; codecs="vorbis"' ) != "" )
+      else if ( audio.canPlayType( 'audio/ogg; codecs="vorbis"' ) != "" )
         musicSrc = LIGHTS.Config.musicOGG;
-        }
+    }
 
     if( musicSrc !== null ) {
 
@@ -71,7 +71,7 @@ LIGHTS.Loader.prototype = {
       console.error( "Error: loadMusic" );
   },
 
-    // _______________________________________________________________________________________ Load Tweets
+  // _______________________________________________________________________________________ Load Tweets
 
   loadTweets: function() {
 
@@ -115,8 +115,8 @@ LIGHTS.Loader.prototype = {
     clearTimeout( this.timeout );
 
     var avatars = [],
-      tweet = 0,
-      username, actor, i, il;
+        tweet = 0,
+        username, actor, i, il;
 
     if( json.result == 'error' ) {
 
@@ -164,7 +164,7 @@ LIGHTS.Loader.prototype = {
       console.log( "loadAvatarImages" );
 
     var  tweet = 0,
-      i, il;
+         i, il;
 
     // Complete usernames + avatars
     for( i = LIGHTS.tweets.length, il = this.totalTweets; i < il; i++ ) {
@@ -183,19 +183,19 @@ LIGHTS.Loader.prototype = {
 
   strip: function( html ) {
 
-     var div = document.createElement( 'div' );
-     div.innerHTML = html;
+    var div = document.createElement( 'div' );
+    div.innerHTML = html;
 
-     return div.textContent || div.innerText;
+    return div.textContent || div.innerText;
   },
 
-    // _______________________________________________________________________________________ Load Images
+  // _______________________________________________________________________________________ Load Images
 
   loadImages: function () {
 
     var callback = bind( this, this.loadFont ),
-      loadedImages = 0,
-      numImages = 0;
+    loadedImages = 0,
+    numImages = 0;
 
     for( var src in LIGHTS.Config.images ) {
 
@@ -206,19 +206,19 @@ LIGHTS.Loader.prototype = {
       LIGHTS.images[ src ].onload = function() {
 
         if( ++loadedImages >= numImages )
-           callback();
+          callback();
       };
 
       LIGHTS.images[ src ].src = LIGHTS.Config.images[ src ];
     }
   },
 
-    // _______________________________________________________________________________________ Load Font
+  // _______________________________________________________________________________________ Load Font
 
   loadFont: function() {
 
     var callback = bind( this, this.onLoaderComplete );
-      client = new XMLHttpRequest();
+    client = new XMLHttpRequest();
 
     client.open( 'GET', LIGHTS.Config.font );
 
@@ -234,7 +234,7 @@ LIGHTS.Loader.prototype = {
     client.send();
   },
 
-    // _______________________________________________________________________________________ Complete
+  // _______________________________________________________________________________________ Complete
 
   onLoaderComplete: function() {
 
