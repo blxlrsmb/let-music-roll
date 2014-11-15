@@ -35,7 +35,8 @@ LIGHTS.Loader.prototype = {
   },
 
   loadConfig: function(config) {
-    LIGHTS.Music.loadPhase(config);
+    LIGHTS.Music.loadPhase(config.config);
+    LIGHTS.Music.loadBeats(config.analyse_result);
   },
 
   // _______________________________________________________________________________________ Load Tweets

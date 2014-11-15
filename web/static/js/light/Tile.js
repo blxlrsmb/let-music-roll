@@ -400,7 +400,7 @@ LIGHTS.CannonManager.prototype = {
       for( i = 0; i < il; i++ )
         tiles[ i ].update();
 
-      if( LIGHTS.time >= 208 )
+      if( LIGHTS.time >= LIGHTS.Music.beatData.end )
         this.fadeMaterials();
     }
   },

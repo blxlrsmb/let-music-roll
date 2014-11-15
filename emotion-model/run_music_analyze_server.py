@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 05:32:56 2014 +0800
+# $Date: Sun Nov 16 06:41:59 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -15,6 +15,8 @@ import md5
 
 import operator
 import subprocess
+
+import functools
 
 import librosa
 from flask import Flask, request, jsonify
@@ -69,6 +71,19 @@ class bind(object):
 
 class AnalyseError(Exception):
     pass
+
+
+def exception_guard(func):
+    @functools.wraps(func)
+    def deco(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            import traceback
+            return jsonify(dict(
+                status='error',
+                detail=e.message + traceback.format_exc()))
+    return deco
 
 
 class MusicAnalyseServer(object):
@@ -135,6 +150,7 @@ class MusicAnalyseServer(object):
             return jsonify(ret)
 
         @app.route('/api/get_animation_config_by_audio', methods=['POST'])
+        @exception_guard
         def gen_animation_config_by_audio():
             temp_dir = TempDir(dir=self.temp_dir, remove_on_exit=False)
             audio_file = self.save_audio_on_request(temp_dir)
@@ -153,6 +169,7 @@ class MusicAnalyseServer(object):
             return jsonify(ret)
 
         @app.route('/api/analyse', methods=['POST'])
+        @exception_guard
         def analyse():
             temp_dir = TempDir(dir=self.temp_dir, remove_on_exit=False)
             audio_file = self.save_audio_on_request(temp_dir)
@@ -247,7 +264,7 @@ class MusicAnalyseServer(object):
         logger.info('audio loaded.')
 
         duration = len(x) / float(fs)
-        if duration >= 5 * 60:
+        if duration >= 10 * 60:
             raise AnalyseError('music too long. analyse rejected.')
 
         # FIXME: unknown memory leak.

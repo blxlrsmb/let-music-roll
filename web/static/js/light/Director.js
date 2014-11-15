@@ -570,7 +570,7 @@ LIGHTS.SpectrumEvents.prototype = {
       voxSpectrum = this.vox.spectrum,
       offset = this.offset,
       frame = Math.floor( LIGHTS.time * 60 ),
-      spectrum = spectrumData[ frame ],
+      spectrum = spectrumData[ frame % spectrumData.length ],
       blur = this.blur,
       averageCount = (blur * 2 + 1),
       averageMult = this.amplitude / averageCount,
@@ -1133,6 +1133,8 @@ LIGHTS.BeatEvents.prototype = {
 
       this.nextIncluded++;
       this.included = (this.nextIncluded < this.beatData.included.length);
+      console.log('BEAT', this.beatData.included[ this.nextIncluded ]);
+      this.beat();
     }
 
     if( LIGHTS.time >= this.beatData.start  &&  LIGHTS.time < this.beatData.end  &&  LIGHTS.time - this.lastTime > this.beatData.freq ) {
@@ -1141,8 +1143,8 @@ LIGHTS.BeatEvents.prototype = {
 
       if( this.beatData.excluded.indexOf( this.lastTime ) == -1 )
       {
-        console.log('BEAT', this.lastTime)
-        this.beat();
+        //console.log('BEAT', this.lastTime)
+        //this.beat();
       }
     }
   },
@@ -1162,7 +1164,8 @@ LIGHTS.BeatEvents.prototype = {
      */
 
   launch: function() {
-    this.beatData.freq = LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].beatfreq;
+    //this.beatData.freq = LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].beatfreq;
+    this.beatData.freq = 0.1;
     switch( LIGHTS.Music.phaseConfig[LIGHTS.Music.phase.index].phase ) {
 
       case 0:
@@ -1305,6 +1308,7 @@ LIGHTS.BeatEvents.prototype = {
 
       case 17: // C3
         this.terrainMesh.launch();
+        this.terrainDots.active = true;
         this.terrainDots.launch();
         this.balls.launch();
         this.cannons.active = true;

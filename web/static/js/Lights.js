@@ -211,6 +211,16 @@ LIGHTS.Music = {
     included:   []//[ 69.75, 71.25, 71.375, 71.75, 149.75  ]
   },
 
+  loadBeats: function(analyze) {
+    var beats = [];
+    for (var i = 0; i < analyze.length; i ++) {
+      var item = analyze[i];
+      if (item[1].beat)
+        beats.push(item[0])
+    }
+    this.beatData.included = beats;
+  },
+
   loadPhase: function(data) {
     this.phase = {
       times: [],
@@ -225,7 +235,11 @@ LIGHTS.Music = {
     for (var i = 0; i < data.phases.length; i ++) {
       this.phase.times.push(data.phases[i].start)
       this.phaseConfig.push(data.phases[i].config)
+      if (this.phaseConfig[this.phaseConfig.length - 1].phase == 16)
+        this.phaseConfig[this.phaseConfig.length - 1].phase = 17
     }
+    this.beatData.start = data.phases[0].start;
+    this.beatData.end = data.time;
   }
 }
 

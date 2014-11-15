@@ -11,30 +11,30 @@ LIGHTS.Vox = function( director ) {
 
 LIGHTS.Vox.prototype = {
 
-    // _______________________________________________________________________________________ Vars
+  // _______________________________________________________________________________________ Vars
 
-    particleCount:      256,
+  particleCount:      256,
   trailCountAdd:      24,
   trailCountAlpha:    24,
   spectrumLength:     64,
 
-    // _______________________________________________________________________________________ Constructor
+  // _______________________________________________________________________________________ Constructor
 
   initialize: function( director ) {
 
-        this.director = director;
+    this.director = director;
     this.player = director.player;
     this.targetPosition = this.player.targetPosition;
 
-        this.vox = new THREE.Object3D();
-        director.view.sceneVox.addChild( this.vox );
+    this.vox = new THREE.Object3D();
+    director.view.sceneVox.addChild( this.vox );
 
     this.voxPosition = this.vox.position;
     this.voxPositionY = 0;
-        this.position = new THREE.Vector3();
-        this.velocity = new THREE.Vector3();
+    this.position = new THREE.Vector3();
+    this.velocity = new THREE.Vector3();
 
-        this.createParticles();
+    this.createParticles();
     this.createTrails();
     this.createBengal();
 
@@ -43,9 +43,9 @@ LIGHTS.Vox.prototype = {
     this.isIntro = false;
     this.isOutro = false;
     this.active = false;
-    },
+  },
 
-    // _______________________________________________________________________________________ Update
+  // _______________________________________________________________________________________ Update
 
   update: function() {
 
@@ -84,7 +84,7 @@ LIGHTS.Vox.prototype = {
         this.updateTrailGeometry( this.trailGeometryAlpha );
       }
     }
-    },
+  },
 
   finish: function() {
 
@@ -94,10 +94,10 @@ LIGHTS.Vox.prototype = {
     this.bengalAlpha = 0;
 
     this.setupParticlesOutro();
-//    this.trailSystemAdd.visible = false;
-//    this.trailSystemAlpha.visible = false;
-//    this.bengal.visible = false;
-//    this.bengalShadow.visible = false;
+    //    this.trailSystemAdd.visible = false;
+    //    this.trailSystemAlpha.visible = false;
+    //    this.bengal.visible = false;
+    //    this.bengalShadow.visible = false;
   },
 
   stop: function() {
@@ -156,12 +156,12 @@ LIGHTS.Vox.prototype = {
     this.bengalMaterialCache.visible = false;
   },
 
-    // _______________________________________________________________________________________ Trails
+  // _______________________________________________________________________________________ Trails
 
   createTrails: function() {
 
     var scene = this.director.view.sceneVox,
-      material, i, il;
+    material, i, il;
 
     var texture = new THREE.Texture( LIGHTS.images.spotLine );
     texture.needsUpdate = true;
@@ -175,14 +175,14 @@ LIGHTS.Vox.prototype = {
     for( i = 0, il = this.trailGeometryAdd.vertices.length; i < il; i++ )
       this.trailGeometryAdd.vertices[ i ].linePosition = new THREE.Vector3();
 
-//    i = this.trailGeometryAdd.vertices.length / this.trailCountAdd;
+    //    i = this.trailGeometryAdd.vertices.length / this.trailCountAdd;
 
     material = new THREE.MeshBasicMaterial( {
 
       map:            texture,
-//      color:          0x202020,
-      blending:       THREE.AdditiveBlending,
-      transparent:    true
+             //      color:          0x202020,
+             blending:       THREE.AdditiveBlending,
+             transparent:    true
     } );
 
     this.trailSystemAdd = new THREE.Mesh( this.trailGeometryAdd, material );
@@ -214,10 +214,10 @@ LIGHTS.Vox.prototype = {
     material = new THREE.MeshBasicMaterial( {
 
       vertexColors:   THREE.VertexColors,
-      map:            texture,
-      opacity:        0.75,
-//      blending:       THREE.AdditiveBlending,
-      transparent:    true
+             map:            texture,
+             opacity:        0.75,
+             //      blending:       THREE.AdditiveBlending,
+             transparent:    true
     } );
 
     this.trailSystemAlpha = new THREE.Mesh( this.trailGeometryAlpha, material );
@@ -251,13 +251,13 @@ LIGHTS.Vox.prototype = {
   setupTrailVertexColors: function( geometry ) {
 
     var trailCount = geometry.trailCount,
-      faces = geometry.faces,
-      faceCount = faces.length,
-      planeOffset = faceCount / trailCount,
-      colorTop = [ 1, 0, 0 ],
-      colorBottom = [ 1, 0, 0 ],
-      f = 0,
-      i, j, color, alpha, alphaMinus;
+    faces = geometry.faces,
+    faceCount = faces.length,
+    planeOffset = faceCount / trailCount,
+    colorTop = [ 1, 0, 0 ],
+    colorBottom = [ 1, 0, 0 ],
+    f = 0,
+    i, j, color, alpha, alphaMinus;
 
     for( i = 0; i < trailCount; i++ ) {
 
@@ -299,8 +299,8 @@ LIGHTS.Vox.prototype = {
   setupTrailGeometry: function( geometry ) {
 
     var vertices = geometry.vertices,
-      vertexCount = vertices.length,
-      v, pos;
+    vertexCount = vertices.length,
+    v, pos;
 
     for( v = 0; v < vertexCount; v++ ) {
 
@@ -316,10 +316,10 @@ LIGHTS.Vox.prototype = {
   setupTrailPositions: function() {
 
     var trail = this.trailPositions,
-      posX = this.voxPosition.x,
-      posY = this.voxPosition.y,
-      posZ = this.voxPosition.z,
-      i, il, pos;
+    posX = this.voxPosition.x,
+    posY = this.voxPosition.y,
+    posZ = this.voxPosition.z,
+    i, il, pos;
 
     for( i = 0, il = trail.length; i < il; i++ ) {
 
@@ -334,7 +334,7 @@ LIGHTS.Vox.prototype = {
   updateTrailPositions: function() {
 
     var thisPos = this.voxPosition,
-      pos = this.trailPositions.pop();
+    pos = this.trailPositions.pop();
 
     pos.x = thisPos.x;
     pos.y = thisPos.y;
@@ -357,8 +357,8 @@ LIGHTS.Vox.prototype = {
       rows:               Math.floor( Math.random() * 8 ) + 4,
       spectrumOffset:     Math.floor( Math.random() * 64 ),
       head:               [ (Math.random() - 0.5) * headNoise,
-                  (Math.random() - 0.5) * headNoise,
-                  (Math.random() - 0.5) * headNoise ] };
+      (Math.random() - 0.5) * headNoise,
+      (Math.random() - 0.5) * headNoise ] };
   },
 
   updateTrailGeometry: function( geometry ) {
@@ -366,18 +366,18 @@ LIGHTS.Vox.prototype = {
     var lineBodyRnd = 0.1; //0.5 * (this.volume + 1);
 
     var time = this.time,
-      spectrum = this.spectrum,
-      spectrumLength = this.spectrumLength,
-      trailPositions = this.trailPositions,
-      trailDatas = geometry.trailDatas,
-      trailCount = geometry.trailCount,
-      posX = this.voxPosition.x,
-      posY = this.voxPosition.y,
-      posZ = this.voxPosition.z,
-      vertices = geometry.vertices,
-      vertexCount = vertices.length,
-      planeOffset = vertexCount / trailCount,
-      v, l, vertex, pos, linePos, a, index, head, spectrumIndex, spectrumRnd, data, offset, freq, amp;
+        spectrum = this.spectrum,
+        spectrumLength = this.spectrumLength,
+        trailPositions = this.trailPositions,
+        trailDatas = geometry.trailDatas,
+        trailCount = geometry.trailCount,
+        posX = this.voxPosition.x,
+        posY = this.voxPosition.y,
+        posZ = this.voxPosition.z,
+        vertices = geometry.vertices,
+        vertexCount = vertices.length,
+        planeOffset = vertexCount / trailCount,
+        v, l, vertex, pos, linePos, a, index, head, spectrumIndex, spectrumRnd, data, offset, freq, amp;
 
     // Shift positions
     for( v = planeOffset - 1; v > 2; v -= 2 ) {
@@ -470,7 +470,7 @@ LIGHTS.Vox.prototype = {
     geometry.__dirtyVertices = true;
   },
 
-    // _______________________________________________________________________________________ Bengal
+  // _______________________________________________________________________________________ Bengal
 
   createBengal: function() {
 
@@ -482,9 +482,9 @@ LIGHTS.Vox.prototype = {
     var material = new THREE.MeshBasicMaterial( {
 
       map:            this.bengalTexture,
-      blending:       THREE.AdditiveBlending,
-      transparent:    true,
-      depthTest:      false
+        blending:       THREE.AdditiveBlending,
+        transparent:    true,
+        depthTest:      false
     } );
 
     this.bengal = new THREE.Mesh( new THREE.PlaneGeometry( 20, 20 ), material );
@@ -501,8 +501,8 @@ LIGHTS.Vox.prototype = {
     material = new THREE.MeshBasicMaterial( {
 
       map:            texture,
-      blending:       THREE.MultiplyBlending,
-      transparent:    true
+             blending:       THREE.MultiplyBlending,
+             transparent:    true
     } );
 
     this.bengalShadow = new THREE.Mesh( new THREE.PlaneGeometry( 20, 20 ), material );
@@ -571,28 +571,28 @@ LIGHTS.Vox.prototype = {
     this.bengalShadow.lookAt( this.director.view.camera.position );
   },
 
-    // _______________________________________________________________________________________ Particles
+  // _______________________________________________________________________________________ Particles
 
   createParticles: function() {
 
-      var p, pl, particle, vertices, particles;
+    var p, pl, particle, vertices, particles;
 
-      // Geometry
-      this.particleGeometry = new THREE.Geometry();
+    // Geometry
+    this.particleGeometry = new THREE.Geometry();
     vertices = this.particleGeometry.vertices;
-      particles = this.particles = [];
+    particles = this.particles = [];
 
-      // Particles
-      for( p = 0, pl = this.particleCount; p < pl; p++ ) {
+    // Particles
+    for( p = 0, pl = this.particleCount; p < pl; p++ ) {
 
-          particle = new LIGHTS.VoxParticle();
+      particle = new LIGHTS.VoxParticle();
 
-          vertices.push( new THREE.Vertex( particle.positionStart ) );
-          vertices.push( new THREE.Vertex( particle.positionEnd ) );
-          particles.push( particle );
-      }
+      vertices.push( new THREE.Vertex( particle.positionStart ) );
+      vertices.push( new THREE.Vertex( particle.positionEnd ) );
+      particles.push( particle );
+    }
 
-      // Material
+    // Material
     this.lineMaterial = new THREE.LineBasicMaterial( {
 
       color:          0xFF8040,
@@ -606,16 +606,16 @@ LIGHTS.Vox.prototype = {
     this.lineSystem = new THREE.Line( this.particleGeometry, this.lineMaterial, THREE.LinePieces );
     this.lineSystem.dynamic = true;
     this.lineSystem.visible = false;
-      this.director.view.scene.addChild( this.lineSystem );
+    this.director.view.scene.addChild( this.lineSystem );
   },
 
   setupParticlesIntro: function() {
 
     var particles = this.particles,
-      positionX = this.voxPosition.x,
-      positionY = this.voxPosition.y,
-      positionZ = this.voxPosition.z,
-      u, a, r, s, p, pl, particle, pos, normal;
+    positionX = this.voxPosition.x,
+    positionY = this.voxPosition.y,
+    positionZ = this.voxPosition.z,
+    u, a, r, s, p, pl, particle, pos, normal;
 
     for( p = 0, pl = this.particleCount; p < pl; p++ ) {
 
@@ -657,11 +657,11 @@ LIGHTS.Vox.prototype = {
   updateParticlesIntro: function() {
 
     var deltaTime = LIGHTS.deltaTime,
-      particles = this.particles,
-      positionX = this.voxPosition.x,
-      positionY = this.voxPosition.y,
-      positionZ = this.voxPosition.z,
-      p, pl, particle, pos, normal, radius;
+    particles = this.particles,
+    positionX = this.voxPosition.x,
+    positionY = this.voxPosition.y,
+    positionZ = this.voxPosition.z,
+    p, pl, particle, pos, normal, radius;
 
     for( p = 0, pl = this.particleCount; p < pl; p++ ) {
 
@@ -696,10 +696,10 @@ LIGHTS.Vox.prototype = {
   setupParticlesOutro: function() {
 
     var particles = this.particles,
-      positionX = this.voxPosition.x,
-      positionY = this.voxPosition.y,
-      positionZ = this.voxPosition.z,
-      p, pl, particle, pos;
+    positionX = this.voxPosition.x,
+    positionY = this.voxPosition.y,
+    positionZ = this.voxPosition.z,
+    p, pl, particle, pos;
 
     for( p = 0, pl = this.particleCount; p < pl; p++ ) {
 
@@ -726,11 +726,11 @@ LIGHTS.Vox.prototype = {
   updateParticlesOutro: function() {
 
     var deltaTime = LIGHTS.deltaTime,
-      particles = this.particles,
-      positionX = this.voxPosition.x,
-      positionY = this.voxPosition.y,
-      positionZ = this.voxPosition.z,
-      p, pl, particle, pos, normal, radius, color, dark;
+    particles = this.particles,
+    positionX = this.voxPosition.x,
+    positionY = this.voxPosition.y,
+    positionZ = this.voxPosition.z,
+    p, pl, particle, pos, normal, radius, color, dark;
 
     for( p = 0, pl = this.particleCount; p < pl; p++ ) {
 
@@ -777,8 +777,8 @@ LIGHTS.Vox.prototype = {
 
 LIGHTS.VoxParticle = function() {
 
-    this.positionStart = new THREE.Vector3();
-    this.positionEnd = new THREE.Vector3();
+  this.positionStart = new THREE.Vector3();
+  this.positionEnd = new THREE.Vector3();
   this.normal = new THREE.Vector3();
 };
 

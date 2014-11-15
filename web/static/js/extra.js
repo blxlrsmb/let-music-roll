@@ -33,15 +33,15 @@ $(document).ready(function() {
               data.append('audio', music);
               LIGHTS.Lights.instance.loader.api.fetchByAudio(data, function(result) {
                 if (result.status != 'success') {
-                  console.error('Failed to fetch config');
+                  console.error('Failed to fetch config: ' + result.detail);
                 } else {
-                  config = result.data.config;
+                  config = result.data;
                   if (musicSrc)
                     LIGHTS.Lights.instance.loader.doLoad(musicSrc, config);
                 }
               });
             } else {
-              config = result.data.config;
+              config = result.data;
               if (musicSrc)
                 LIGHTS.Lights.instance.loader.doLoad(musicSrc, config);
             }
