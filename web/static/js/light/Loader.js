@@ -34,16 +34,8 @@ LIGHTS.Loader.prototype = {
     this.loadMusic(music);
   },
 
-  loadConfig: function(item) {
-    if (!item)
-      item = 'test.json';
-    this.loadData(item);
-  },
-
-  loadData: function(item) {
-    this.api.fetch(item, function(data) {
-      LIGHTS.Music.loadPhase(data);
-    });
+  loadConfig: function(config) {
+    LIGHTS.Music.loadPhase(config);
   },
 
   // _______________________________________________________________________________________ Load Tweets
