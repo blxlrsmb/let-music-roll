@@ -212,15 +212,6 @@ LIGHTS.Music = {
   },
 
   loadPhase: function(data) {
-    var gen_beatdata_with_freq = function(freq) {
-      return {
-        start: 0,
-        end:99999999,
-        freq:freq,
-        excluded:[],
-        included:[]
-        };
-    };
     this.phase = {
       times: [],
       index: 0
@@ -228,17 +219,12 @@ LIGHTS.Music = {
     this.phaseConfig = [
       {
         phase: 0,
-        beatData: gen_beatdata_with_freq(10000)
+        beatfreq: 0
       }
     ]
     for (var i = 0; i < data.phases.length; i ++) {
       this.phase.times.push(data.phases[i].start)
-      var cfg = data.phases[i].config;
-      this.phaseConfig.push(
-          { phase: cfg.phase,
-            beatData: gen_beatdata_with_freq(cfg.beatfreq)
-          }
-      );
+      this.phaseConfig.push(data.phases[i].config)
     }
   }
 }
