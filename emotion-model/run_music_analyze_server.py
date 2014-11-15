@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 01:27:45 2014 +0800
+# $Date: Sun Nov 16 02:34:23 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -11,6 +11,7 @@ import os
 import imp
 import tempfile
 import gc
+import md5
 
 import operator
 import subprocess
@@ -21,7 +22,7 @@ import numpy as np
 
 from lmr.features import extract as extract_feature
 from lmr.utils import wavread, read_by_line, serial, ProgressReporter
-from lmr.utils.fs import TempDir
+from lmr.utils.fs import TempDir, mkdir_p
 from lmr.utils.concurrency import parallel
 
 from lmr.utils.iteration import pimap
@@ -67,18 +68,49 @@ class bind(object):
 
 class MusicAnalyseServer(object):
     def __init__(self, arousal_model, valence_model, feature_list,
-                 temp_dir, port, ws=0.5, st=0.5):
+                 temp_dir, precomputed_results_dir, port, ws=0.5, st=0.5):
         ''':param ws, st: (window_size, stride)'''
         self.app = Flask(__name__)
         self.arousal_model = self._load_model(arousal_model)
         self.valence_model = self._load_model(valence_model)
         self.feature_list = feature_list
         self.temp_dir = temp_dir
+        self.precomputed_results_dir = precomputed_results_dir
+        mkdir_p(precomputed_results_dir)
+        self.precomputed_idx = set(os.listdir(precomputed_results_dir))
         self.port = port
         self.ws = ws
         self.st = st
 
         self.build_app()
+
+    def _hash_by_file_content(self, path):
+        m = md5.new()
+        with open(path, 'rb') as f:
+            m.update(f.read())
+        return m.hexdigest()
+
+    def _json_load(self, f):
+        if isinstance(f, basestring):
+            with open(f, 'rb') as _f:
+                return self._json_load(_f)
+        return json.load(f)
+
+    def _json_dump(self, obj, f):
+        if isinstance(f, basestring):
+            with open(f, 'wb') as _f:
+                return self._json_dump(obj, _f)
+        return json.dump(obj, f)
+
+    def _load_precomputed(self, idx):
+        path = os.path.join(self.precomputed_results_dir,
+                            idx)
+        return self._json_load(path)
+
+    def _dump_computed(self, obj, idx):
+        path = os.path.join(self.precomputed_results_dir,
+                            idx)
+        return self._json_dump(obj, path)
 
     def build_app(self):
         app = self.app
@@ -93,6 +125,17 @@ class MusicAnalyseServer(object):
             filename = file_storage.filename
             audio_file = os.path.join(tempdir, filename)
             file_storage.save(audio_file)
+
+            hash_idx = self._hash_by_file_content(audio_file)
+            logger.info('hash_idx: {}'.format(hash_idx))
+            if hash_idx in self.precomputed_idx:
+                logger.info('precomputed result found for `{}\'.'.format(
+                    filename))
+                try:
+                    return jsonify(self._load_precomputed(hash_idx))
+                except Exception as e:
+                    logger.error('unable to load {}, compute again'.format(
+                        hash_idx))
 
             wavfile_path = os.path.join(tempdir, filename + '.wav')
 
@@ -109,13 +152,6 @@ class MusicAnalyseServer(object):
             # temporally fixed by computing in another process
             # and turn it off to release memories
 
-#             logger.info('analysing emotion ...')
-#             emotion_series = single_worker_call_member_method(
-#                 self, '_emotion_analyse', x, fs)
-#             logger.info('analysing beats ...')
-#             beat_series = single_worker_call_member_method(
-#                 self, '_beat_analyses', x, fs)
-
             emotion_series, beat_series = parallel(
                 bind(single_worker_call_member_method,
                     self, '_emotion_analyse', x, fs),
@@ -126,11 +162,23 @@ class MusicAnalyseServer(object):
             result = list(sorted(emotion_series + beat_series,
                            key=operator.itemgetter(0)))
 
-#             result = analyse_worker(self, x, fs)
+            result_path = os.path.join(self.precomputed_results_dir,
+                                       hash_idx)
+
+            self._dump_computed(result, hash_idx)
+            self.precomputed_idx.add(hash_idx)
 
             return jsonify(dict(
                 status='success',
                 data=result))
+
+    def _read_precomputed_results(self, dirname):
+        ret = dict()
+        for fname in os.listdir(dirname):
+            fpath = os.path.join(dirname, fname)
+            with open(fpath, 'rb') as f:
+                ret[fname] = json.load(f)
+        return ret
 
 
     def xrangef(self, begin, end, step):
@@ -247,6 +295,7 @@ def main():
         valence_model=config.valence_model,
         feature_list=read_by_line(config.feature_list_file),
         temp_dir=config.temp_dir, port=config.port,
+        precomputed_results_dir=config.precomputed_results_dir,
         ws=config.ws, st=config.st)
 
     server.app.debug = True
