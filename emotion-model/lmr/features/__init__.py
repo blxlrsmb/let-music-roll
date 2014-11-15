@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: __init__.py
-# $Date: Sat Nov 15 00:58:26 2014 +0800
+# $Date: Sat Nov 15 17:06:29 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 from bregman import suite, features
@@ -47,7 +47,7 @@ def extract(feat_name, ws, st, x, fs):
         :parma st: stride, in seconds
         :return: features of shape (frames, feature_dim)
     '''
-    assert feat_name in _FEAT_NAME2CLASS_NAME
+    assert feat_name in _FEAT_NAME2CLASS_NAME, feat_name
     clsname = _FEAT_NAME2CLASS_NAME[feat_name]
     extractor = _bregman(clsname, ws, st)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: iteration.py
-# $Date: Sat Nov 15 01:22:55 2014 +0800
+# $Date: Sat Nov 15 17:06:47 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import multiprocessing
@@ -34,8 +34,11 @@ class PickleableMethodProxy(object):
         return getattr(self.im_self, self.method_name)(*args, **kwargs)
 
 
+def islambda(func):
+    return inspect.isfunction(func) and func.__name__ == '<lambda>'
+
 def ensure_pickleable_func(func):
-    if inspect.ismethod(func):
+    if inspect.ismethod(func) or islambda(func):
         return PickleableMethodProxy(func)
     return func
 
