@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 04:46:04 2014 +0800
+# $Date: Sun Nov 16 04:50:00 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -143,7 +143,9 @@ class MusicAnalyseServer(object):
             logger.info('hash_idx: {}'.format(hash_idx))
 
             result = self.get_analyse_result_by_hash(hash_idx)
-            self._cache_analyse_result(result, hash_idx)
+            if result is None:
+                result = self._do_analayse(audio_file)
+                self._cache_analyse_result(result, hash_idx)
 
             ret = self._gen_anim_conf_resp_data_by_analyse_result(
                 result, hash_idx)
