@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 04:50:00 2014 +0800
+# $Date: Sun Nov 16 04:57:28 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -144,7 +144,7 @@ class MusicAnalyseServer(object):
 
             result = self.get_analyse_result_by_hash(hash_idx)
             if result is None:
-                result = self._do_analayse(audio_file)
+                result = self._do_analyse(audio_file, temp_dir.tempdir())
                 self._cache_analyse_result(result, hash_idx)
 
             ret = self._gen_anim_conf_resp_data_by_analyse_result(
@@ -164,7 +164,7 @@ class MusicAnalyseServer(object):
             if result is not None:
                 return jsonify(dict(status='success', data=result))
 
-            result = self._do_analayse(audio_file)
+            result = self._do_analyse(audio_file, temp_dir.tempdir())
             self._cache_analyse_result(result, hash_idx)
 
             return jsonify(dict(
@@ -232,7 +232,7 @@ class MusicAnalyseServer(object):
         return audio_file
 
 
-    def _do_analyse(self, audio_file):
+    def _do_analyse(self, audio_file, tempdir):
         ''':return: analyse result.
         may throw AnalyseError exception'''
         filename = os.path.basename(audio_file)
