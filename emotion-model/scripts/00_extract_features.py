@@ -1,16 +1,18 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: 00_extract_features.py
-# $Date: Sat Nov 15 17:07:43 2014 +0800
+# $Date: Sat Nov 15 17:16:03 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import argparse
 
 import os
+import gc
 import numpy as np
 
-from lmr.preproc import ensure_signal_duration
-from lmr.utils import wavread, read_by_line, serial, iteration, fs
+from lmr.preproc import ensure_signal_duration, wavread_ensure_signal_duration
+from lmr.utils import wavread, read_by_line, serial, iteration, fs, \
+    ProgressReporter
 from lmr.features import extract as extract_feature
 
 
@@ -18,19 +20,23 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def process_music(music_path, feat_names, ws, st, output_path):
-    print music_path
-    x, fs = wavread(music_path)
-    Xs = []
-    for name in feat_names:
-        Xs.append(extract_feature(name, ws, st, x, fs))
+def process_music(music_path, feat_names, ws, st, output_prefix):
+    logger.info('processing music {} ...'.format(music_path))
 
-    X = np.hstack(Xs)
-    serial.dump(X, output_path)
-    logger.info('Feature extraction for {} finished. '
-                'Output saved to {}.'.format(music_path, output_path))
-    import gc
-    gc.collect()
+    x, fs = wavread_ensure_signal_duration(music_path, 45)
+
+    for name in feat_names:
+        output_path = '{}.{}.pkl'.format(
+            output_prefix, name)
+        if os.path.exists(output_path):
+            logger.info('{} already exists. skip'.format(output_path))
+            continue
+        X = extract_feature(name, ws, st, x, fs)
+        serial.dump(X, output_path)
+        logger.info('{} generated'.format(output_path))
+
+        gc.collect()
+
 
 
 def main():
@@ -53,12 +59,17 @@ def main():
 
     fs.mkdir_p(args.output_dir)
 
-    iteration.pmap(lambda mf: process_music(
-        mf[0], mf[1] , args.window_size, args.stride,
-        os.path.join(args.output_dir,
-                     os.path.basename(mf[0]) + '.pkl')),
-          zip(music_path_list, [feature_list] * len(music_path_list)))
+    generator = iteration.pimap(
+        lambda mf: process_music(
+            mf[0], mf[1] , args.window_size, args.stride,
+            os.path.join(args.output_dir,
+                         os.path.basename(mf[0]))),
+        zip(music_path_list, [feature_list] * len(music_path_list)))
 
+    prog = ProgressReporter('generate features', total=len(music_path_list))
+    for i in generator:
+        prog.trigger()
+    prog.finish()
 
 if __name__ == '__main__':
     main()
