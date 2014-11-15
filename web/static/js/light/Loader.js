@@ -21,11 +21,25 @@ LIGHTS.Loader.prototype = {
 	initialize: function( callback ) {
 
 		this.callback = callback;
+        this.api = new LIGHTS.API('api');
 
 		LIGHTS.Loader.prototype.instance = this;
 
 		this.avatarsLoaded = false;
+        this.loadConfig();
 		this.loadMusic();
+	},
+
+    loadConfig: function(item) {
+		if (!item)
+			item = 'test.json'
+		this.loadData(item)
+    },
+
+	loadData: function(item) {
+		this.api.fetch(item, function(data) {
+			LIGHTS.Music.loadPhase(data)
+		})
 	},
 
     // _______________________________________________________________________________________ Load Tweets

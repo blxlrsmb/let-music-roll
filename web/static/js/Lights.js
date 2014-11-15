@@ -128,7 +128,6 @@ LIGHTS.Lights.prototype = {
 			this.renderManager = new LIGHTS.RenderManager();
 			this.input = new LIGHTS.Input();
 			this.gui = new LIGHTS.GUI( true );
-			this.api = new LIGHTS.API('api');
 			this.home = new LIGHTS.Home( this.renderManager, this.gui, bind( this, this.launchHome ) );
 			this.loader = new LIGHTS.Loader( bind( this, this.launch ) );
 		} else {
@@ -151,22 +150,10 @@ LIGHTS.Lights.prototype = {
 		this.home.launchPlay();
 	},
 
-	loadData: function(item, callback) {
-		this.api.fetch(item, function(data) {
-			LIGHTS.Music.loadPhase(data)
-			callback()
-		})
-	},
-
 	playExperience: function(item) {
-		if (!item)
-			item = 'test.json'
-		that = this
-		this.loadData(item, function () {
-			that.home.stop();
-			that.director.start();
-			that.experiencePlaying = true;
-		})
+		this.home.stop();
+		this.director.start();
+		this.experiencePlaying = true;
 	},
 
 	playHome: function() {
