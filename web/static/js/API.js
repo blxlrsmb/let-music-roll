@@ -11,7 +11,7 @@ LIGHTS.API.prototype = {
   },
   fetchByAudio: function(item, callback) {
     $.ajax({
-      url: this.baseurl + "/get_animation_config_by_audio/",
+      url: this.baseurl + "/get_animation_config_by_audio",
       method: 'post',
       data: item,
       processData: false,

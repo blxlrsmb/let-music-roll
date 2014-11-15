@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 04:09:59 2014 +0800
+# $Date: Sun Nov 16 04:37:58 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -130,31 +130,33 @@ class MusicAnalyseServer(object):
                            detail='No hash_idx param found.')
             else:
                 analyse_result = self.get_analyse_result_by_hash(hash_idx)
-                if analyse_result is None:
-                    ret = dict(
-                        status='error',
-                        detail='Unable to find result for hash {}'.format(
-                            hash_idx))
-                else:
-                    try:
-                        animation_config = self.animation_gen_method(
-                            analyse_result)
-                        if animation_config is None:
-                            ret = dict(
-                                status='error',
-                                detail='Unable to generate animation config')
-                    except Exception as e:
-                        ret = dict(
-                            status='error',
-                            detail=e.message)
-                    else:
-                        ret = dict(status='success',
-                                   data=animation_config)
+                ret = self._gen_anim_conf_resp_data_by_analyse_result(
+                    analyse_result, hash_idx)
             return jsonify(ret)
 
-        @app.route('/api/gen_animation_config_by_audio', methods=['POST'])
+        @app.route('/api/get_animation_config_by_audio', methods=['POST'])
         def gen_animation_config_by_audio():
-            pass
+            print 1
+            temp_dir = TempDir(dir=self.temp_dir, remove_on_exit=False)
+            print 2
+            audio_file = self.save_audio_on_request(temp_dir)
+            print 3
+
+            hash_idx = self._hash_by_file_content(audio_file)
+            print 4
+            logger.info('hash_idx: {}'.format(hash_idx))
+            print 5
+
+            result = self.get_analyse_result_by_hash(hash_idx)
+            print 6
+            self._cache_analyse_result(result, hash_idx)
+            print 7
+
+            ret = self._gen_anim_conf_resp_data_by_analyse_result(
+                result, hash_idx)
+            print 8
+
+            return jsonify(ret)
 
         @app.route('/api/analyse', methods=['POST'])
         def analyse():
@@ -169,18 +171,46 @@ class MusicAnalyseServer(object):
                 return jsonify(dict(status='success', data=result))
 
             result = self._do_analayse(audio_file)
-
-            result_path = os.path.join(self.precomputed_results_dir,
-                                       hash_idx)
-
-            self._dump_computed(result, hash_idx)
-            self.precomputed_idx.add(hash_idx)
+            self._cache_analyse_result(result, hash_idx)
 
             return jsonify(dict(
                 status='success',
                 data=result))
 
         ###### BUILD APPP END #####
+
+    def _cache_analyse_result(self, result, hash_idx):
+        result_path = os.path.join(self.precomputed_results_dir,
+                                   hash_idx)
+
+        self._dump_computed(result, hash_idx)
+        self.precomputed_idx.add(hash_idx)
+
+
+    def _gen_anim_conf_resp_data_by_analyse_result(
+                self, analyse_result, hash_idx):
+        if analyse_result is None:
+            ret = dict(
+                status='error',
+                detail='Unable to find result for hash {}'.format(
+                    hash_idx))
+        else:
+            try:
+                animation_config = self.animation_gen_method(
+                    analyse_result)
+                if animation_config is None:
+                    ret = dict(
+                        status='error',
+                        detail='Unable to generate animation config')
+            except Exception as e:
+                ret = dict(
+                    status='error',
+                    detail=e.message)
+            else:
+                ret = dict(status='success',
+                           data=animation_config)
+        return ret
+
 
     def get_analyse_result_by_hash(self, hash_idx):
         ''':return: None if not found, otherwise the cached results'''
@@ -198,12 +228,19 @@ class MusicAnalyseServer(object):
     def save_audio_on_request(self, temp_dir):
         '''save uploaded audio
         :return: audio file path'''
+
+        print '#1'
         file_storage = request.files['music']
+        print '#2'
 
         tempdir = temp_dir.tempdir()
+        print '#3'
         filename = file_storage.filename
+        print '#4'
         audio_file = os.path.join(tempdir, filename)
+        print '#5'
         file_storage.save(audio_file)
+        print '#6'
 
         return audio_file
 
