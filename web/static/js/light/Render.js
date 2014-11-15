@@ -3,7 +3,7 @@
 
 LIGHTS.View = function( renderManager ) {
 
-	this.initialize( renderManager );
+  this.initialize( renderManager );
 };
 
 LIGHTS.View.prototype = {
@@ -14,9 +14,9 @@ LIGHTS.View.prototype = {
 
         debugView:      false,
 //        debugView:      true,
-	    debugViewY:     5000,
+      debugViewY:     5000,
 
-	    antialias:      false,
+      antialias:      false,
 //        fog:            false,
         fog:            true,
         fogAmount:      0.002
@@ -29,24 +29,24 @@ LIGHTS.View.prototype = {
         blurAmount:     0.0015
     },
 
-	initialize: function( renderManager ) {
+  initialize: function( renderManager ) {
 
-		this.renderManager = renderManager;
-		this.renderer = renderManager.renderer;
+    this.renderManager = renderManager;
+    this.renderer = renderManager.renderer;
 
         // Camera
         if( this.options.debugView ) {
 
-	        this.camera = new THREE.Camera( 33, window.innerWidth / window.innerHeight, 1, 16000 );
-	        this.camera.position.x = 0;
-	        this.camera.position.y = this.options.debugViewY;
-	        this.camera.position.z = 700;
-	        this.camera.rotation.x = -rad90;
+          this.camera = new THREE.Camera( 33, window.innerWidth / window.innerHeight, 1, 16000 );
+          this.camera.position.x = 0;
+          this.camera.position.y = this.options.debugViewY;
+          this.camera.position.z = 700;
+          this.camera.rotation.x = -rad90;
             this.camera.useTarget = false;
         }
         else {
 
-	        this.camera = new THREE.Camera( 30, window.innerWidth / window.innerHeight, 1, 1600 );
+          this.camera = new THREE.Camera( 30, window.innerWidth / window.innerHeight, 1, 1600 );
         }
 
         // Scene
@@ -56,12 +56,12 @@ LIGHTS.View.prototype = {
             this.scene.fog = new THREE.FogExp2( 0x000000, this.options.fogAmount );
 //            this.scene.fog = new THREE.Fog( 0x000000, this.camera.near, this.camera.far );
 
-		this.sceneVox = new THREE.Scene();
+    this.sceneVox = new THREE.Scene();
 
         this.initPostprocessing();
 
-		this.onWindowResizeListener = bind( this, this.onWindowResize );
-	},
+    this.onWindowResizeListener = bind( this, this.onWindowResize );
+  },
 
     // _______________________________________________________________________________________ Public
 
@@ -76,16 +76,16 @@ LIGHTS.View.prototype = {
             this.scene.fog.fogAmount = fogAmount;
     },
 
-	start: function() {
+  start: function() {
 
-		window.addEventListener( 'resize', this.onWindowResizeListener, false );
-		this.onWindowResize();
-	},
+    window.addEventListener( 'resize', this.onWindowResizeListener, false );
+    this.onWindowResize();
+  },
 
-	stop: function() {
+  stop: function() {
 
-		window.removeEventListener( 'resize', this.onWindowResizeListener, false );
-	},
+    window.removeEventListener( 'resize', this.onWindowResizeListener, false );
+  },
 
     update: function() {
 
@@ -113,16 +113,16 @@ LIGHTS.View.prototype = {
             this.renderer.render( this.postprocessing.scene, this.postprocessing.camera, this.postprocessing.rtTexture1, false );
 
             // Render to screen
-	        this.postprocessing.materialVignette.uniforms.tDiffuse.texture = this.postprocessing.rtTexture1;
+          this.postprocessing.materialVignette.uniforms.tDiffuse.texture = this.postprocessing.rtTexture1;
             this.renderer.render( this.postprocessing.sceneScreen, this.postprocessing.camera );
 
-	        // Render vox
-	        this.renderer.render( this.sceneVox, this.camera );
+          // Render vox
+          this.renderer.render( this.sceneVox, this.camera );
 
         } else {
 
             this.renderer.render( this.scene, this.camera );
-	        this.renderer.render( this.sceneVox, this.camera );
+          this.renderer.render( this.sceneVox, this.camera );
             this.renderManager.update();
         }
     },
@@ -133,11 +133,11 @@ LIGHTS.View.prototype = {
         this.postprocessing.sceneScreen = new THREE.Scene();
 
         this.postprocessing.camera = new THREE.Camera();
-	    this.postprocessing.camera.projectionMatrix = THREE.Matrix4.makeOrtho( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
-	    this.postprocessing.camera.position.z = 100;
+      this.postprocessing.camera.projectionMatrix = THREE.Matrix4.makeOrtho( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
+      this.postprocessing.camera.position.z = 100;
 
         var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
-//	    var pars = { minFilter: THREE.LinearMipMapLinearFilter, magFilter: THREE.LinearMipMapLinearFilter, format: THREE.RGBFormat };
+//      var pars = { minFilter: THREE.LinearMipMapLinearFilter, magFilter: THREE.LinearMipMapLinearFilter, format: THREE.RGBFormat };
 
         this.postprocessing.rtTexture1 = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, pars );
         this.postprocessing.rtTexture2 = new THREE.WebGLRenderTarget( 512, 512, pars );
@@ -158,33 +158,33 @@ LIGHTS.View.prototype = {
             transparent: true
         } );
 
-		// Vignette
-		var vignetteFragmentShader = [
+    // Vignette
+    var vignetteFragmentShader = [
 
-			"varying vec2 vUv;",
-			"uniform sampler2D tDiffuse;",
+      "varying vec2 vUv;",
+      "uniform sampler2D tDiffuse;",
 
-			"void main() {",
+      "void main() {",
 
-				"vec4 texel = texture2D( tDiffuse, vUv );",
-				"vec2 coords = (vUv - 0.5) * 2.0;",
-				"float coordDot = dot (coords,coords);",
-				"float mask = 1.0 - coordDot * 0.3;",
-				"gl_FragColor = texel * mask;",
-			"}"
+        "vec4 texel = texture2D( tDiffuse, vUv );",
+        "vec2 coords = (vUv - 0.5) * 2.0;",
+        "float coordDot = dot (coords,coords);",
+        "float mask = 1.0 - coordDot * 0.3;",
+        "gl_FragColor = texel * mask;",
+      "}"
 
-		].join("\n");
+    ].join("\n");
 
-	    this.postprocessing.materialVignette = new THREE.MeshShaderMaterial( {
+      this.postprocessing.materialVignette = new THREE.MeshShaderMaterial( {
 
-	        uniforms: screen_uniforms,
-	        vertexShader: screen_shader.vertexShader,
-	        fragmentShader: vignetteFragmentShader,
-		    blending: THREE.AdditiveBlending,
-		    transparent: true
-	    } );
+          uniforms: screen_uniforms,
+          vertexShader: screen_shader.vertexShader,
+          fragmentShader: vignetteFragmentShader,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      } );
 
-		// Convolution
+    // Convolution
         var convolution_shader = THREE.ShaderUtils.lib["convolution"];
         var convolution_uniforms = THREE.UniformsUtils.clone( convolution_shader.uniforms );
 
@@ -203,98 +203,98 @@ LIGHTS.View.prototype = {
         } );
 
         this.postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), this.postprocessing.materialConvolution );
-	    this.postprocessing.quad.scale.x = window.innerWidth;
-	    this.postprocessing.quad.scale.y = window.innerHeight;
+      this.postprocessing.quad.scale.x = window.innerWidth;
+      this.postprocessing.quad.scale.y = window.innerHeight;
         this.postprocessing.quad.position.z = -500;
         this.postprocessing.scene.addObject( this.postprocessing.quad );
 
         this.postprocessing.quadScreen = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), this.postprocessing.materialVignette );
-	    this.postprocessing.quadScreen.scale.x = window.innerWidth;
-	    this.postprocessing.quadScreen.scale.y = window.innerHeight;
+      this.postprocessing.quadScreen.scale.x = window.innerWidth;
+      this.postprocessing.quadScreen.scale.y = window.innerHeight;
         this.postprocessing.quadScreen.position.z = -500;
         this.postprocessing.sceneScreen.addObject( this.postprocessing.quadScreen );
     },
 
-	onWindowResize: function() {
+  onWindowResize: function() {
 
-		this.renderer.setSize( window.innerWidth, window.innerHeight );
-		this.camera.aspect = window.innerWidth / window.innerHeight;
-		this.camera.updateProjectionMatrix();
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
 
-		// Postprocessing
-		this.postprocessing.camera.projectionMatrix = THREE.Matrix4.makeOrtho( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
-		this.postprocessing.quad.scale.x = window.innerWidth;
-		this.postprocessing.quad.scale.y = window.innerHeight;
-		this.postprocessing.quadScreen.scale.x = window.innerWidth;
-		this.postprocessing.quadScreen.scale.y = window.innerHeight;
+    // Postprocessing
+    this.postprocessing.camera.projectionMatrix = THREE.Matrix4.makeOrtho( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
+    this.postprocessing.quad.scale.x = window.innerWidth;
+    this.postprocessing.quad.scale.y = window.innerHeight;
+    this.postprocessing.quadScreen.scale.x = window.innerWidth;
+    this.postprocessing.quadScreen.scale.y = window.innerHeight;
 
-		var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
-		this.postprocessing.rtTexture1 = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, pars );
-	}
+    var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+    this.postprocessing.rtTexture1 = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, pars );
+  }
 };
 
 LIGHTS.RenderManager = function() {
 
-	this.initialize();
+  this.initialize();
 };
 
 LIGHTS.RenderManager.prototype = {
-	initialize: function() {
+  initialize: function() {
 
-		var container = document.createElement('div'),
-			style = container.style;
+    var container = document.createElement('div'),
+      style = container.style;
 
-		style.position = 'absolute';
-		style.top = '0px';
-		style.left = '0px';
-		style.zIndex = '-100';
-		style.margin = '0';
-		style.padding = '0';
-		document.body.appendChild( container );
+    style.position = 'absolute';
+    style.top = '0px';
+    style.left = '0px';
+    style.zIndex = '-100';
+    style.margin = '0';
+    style.padding = '0';
+    document.body.appendChild( container );
 
 
-		var _canvas = document.createElement( 'canvas' );
+    var _canvas = document.createElement( 'canvas' );
 
-		var error = "";
-		var retrieveError = function(e) { error = e.statusMessage || "unknown error"; };
+    var error = "";
+    var retrieveError = function(e) { error = e.statusMessage || "unknown error"; };
 
-		_canvas.addEventListener("webglcontextcreationerror", retrieveError, false);
-		var ctx = _canvas.getContext("experimental-webgl");
-		_canvas.removeEventListener("webglcontextcreationerror", retrieveError, false);
+    _canvas.addEventListener("webglcontextcreationerror", retrieveError, false);
+    var ctx = _canvas.getContext("experimental-webgl");
+    _canvas.removeEventListener("webglcontextcreationerror", retrieveError, false);
 
-		if( ctx ) {
+    if( ctx ) {
 
-			var renderer = new THREE.WebGLRenderer( { canvas: _canvas, clearColor: 0x000000, clearAlpha: 1, antialias: false } );
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			renderer.autoClear = false;
-			container.appendChild( renderer.domElement );
+      var renderer = new THREE.WebGLRenderer( { canvas: _canvas, clearColor: 0x000000, clearAlpha: 1, antialias: false } );
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      renderer.autoClear = false;
+      container.appendChild( renderer.domElement );
 
-			this.renderer = renderer;
-		}
-		else {
+      this.renderer = renderer;
+    }
+    else {
 
-			alert("WebGL error: " + error);
-		}
+      alert("WebGL error: " + error);
+    }
 
         // Stats
-		if( ! LIGHTS.releaseBuild ) {
+    if( ! LIGHTS.releaseBuild ) {
 
-			this.renderStats = new THREE.RenderStats( this.renderer );
+      this.renderStats = new THREE.RenderStats( this.renderer );
 
-	        this.stats = new Stats();
-	        this.stats.domElement.style.position = 'absolute';
-	        this.stats.domElement.style.top = '-42px';
-	        this.renderStats.container.appendChild( this.stats.domElement );
-		}
-	},
+          this.stats = new Stats();
+          this.stats.domElement.style.position = 'absolute';
+          this.stats.domElement.style.top = '-42px';
+          this.renderStats.container.appendChild( this.stats.domElement );
+    }
+  },
 
-	update: function() {
+  update: function() {
 
-		if( ! LIGHTS.releaseBuild ) {
+    if( ! LIGHTS.releaseBuild ) {
 
-			this.renderStats.update();
-			this.stats.update();
-		}
-	}
+      this.renderStats.update();
+      this.stats.update();
+    }
+  }
 };
 
