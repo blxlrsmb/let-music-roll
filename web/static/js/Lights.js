@@ -128,6 +128,8 @@ LIGHTS.Lights.prototype = {
   },
 
   playExperience: function(item) {
+    if (this.experiencePlaying) return;
+    this.graph = new WavGraph(this);
     this.home.stop();
     this.director.start();
     this.experiencePlaying = true;
@@ -211,12 +213,21 @@ LIGHTS.Music = {
     included:   []//[ 69.75, 71.25, 71.375, 71.75, 149.75  ]
   },
 
+  AVdata : [],
+  // load beats and a/v
   loadBeats: function(analyze) {
     var beats = [];
     for (var i = 0; i < analyze.length; i ++) {
       var item = analyze[i];
       if (item[1].beat)
-        beats.push(item[0])
+        beats.push(item[0]);
+      else {
+        this.AVdata.push({
+          time: item[0],
+          a: item[1].arousal,
+          v: item[1].valence
+        });
+      }
     }
     this.beatData.included = beats;
   },
@@ -225,13 +236,13 @@ LIGHTS.Music = {
     this.phase = {
       times: [],
       index: 0
-    }
+    };
     this.phaseConfig = [
       {
         phase: 0,
         beatfreq: 0.5
       }
-    ]
+    ];
     for (var i = 0; i < data.phases.length; i ++) {
       this.phase.times.push(data.phases[i].start)
       this.phaseConfig.push(data.phases[i].config)

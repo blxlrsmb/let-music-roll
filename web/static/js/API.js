@@ -7,6 +7,7 @@ LIGHTS.API.prototype = {
     this.baseurl = baseurl
   },
   fetchByHash: function(item, callback) {
+    //$.getJSON(this.baseurl + '/fetch/test.json', callback);
     $.getJSON(this.baseurl + "/get_animation_config_by_hash?hash_idx=" + item, callback)
   },
   fetchByAudio: function(item, callback) {

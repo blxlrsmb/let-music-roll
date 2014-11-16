@@ -1,5 +1,5 @@
 //File: Terrain.js
-//Date: Sat Nov 15 00:27:33 2014 +0800
+//Date: Sun Nov 16 03:58:58 2014 +0800
 
 
 LIGHTS.Terrain = function( director ) {
@@ -2157,6 +2157,7 @@ LIGHTS.TerrainDotsManager.prototype = {
   },
 
   moveToWords: function() {
+    if (this.text == undefined) return;
 
     this.text.update();
 

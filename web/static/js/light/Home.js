@@ -1,5 +1,5 @@
 //File: Home.js
-//Date: Sat Nov 15 16:51:55 2014 +0800
+//Date: Sun Nov 16 08:57:57 2014 +0800
 
 LIGHTS.Home = function( renderManager, gui, callback ) {
 
@@ -457,7 +457,6 @@ LIGHTS.Home.prototype = {
       }
     }
     else {
-      console.log(this.isLoaded)
       if ( this.isLoading || !this.isLoaded) {
         // Loading
         if( this.alpha < 1 ) {
