@@ -1,11 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-<<<<<<< HEAD
-# $Date: Sun Nov 16 12:17:53 2014 +0800
-=======
-# $Date: Sun Nov 16 12:04:15 2014 +0800
->>>>>>> more smooth
+# $Date: Sun Nov 16 12:22:18 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
