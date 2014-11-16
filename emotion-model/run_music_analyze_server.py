@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 06:41:59 2014 +0800
+# $Date: Sun Nov 16 11:59:06 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -219,6 +219,7 @@ class MusicAnalyseServer(object):
                     status='error',
                     detail=traceback.format_exc())
             else:
+                analyse_result = self._populate_arousal_valence(analyse_result)
                 ret = dict(status='success',
                            data=dict(
                                analyse_result=analyse_result,
@@ -226,6 +227,41 @@ class MusicAnalyseServer(object):
                            ))
         return ret
 
+    def _weighted_average(self, x_pivot, data):
+        weight_sum, accum = 0.0, 0.0
+        for x, y in data:
+            weight_sum += 1.0 / (1 + abs(x - x_pivot))
+            accum += 1.0 / (1 + abs(x - x_pivot)) * y
+
+        ret = accum / weight_sum
+#         print x_pivot, data, ret
+#         from IPython import embed; embed()
+        return ret
+
+    def _get_subseq(self, av, left, right, name):
+        left = max(0, left)
+        right = min(len(av) - 1, right)
+        return [(t, r[name]) for t, r in av[left:right+1]]
+
+    def _populate_arousal_valence(self, analyse_result):
+        beats = filter(lambda r: 'beat' in r[1], analyse_result)
+
+        av = filter(lambda r: 'beat' not in r[1], analyse_result)
+        new_av = []
+        NR_INSERT = 4
+        for i, (ts, r) in enumerate(av):
+            if i + 1 < len(av):
+                new_av.append((ts, r))
+                for j in xrange(NR_INSERT):
+                    pivot = begin + (end - begin) * (j + 1) / float(NR_INSERT + 1)
+                    a = self._weighted_average(pivot, self._get_subseq(
+                        av, i - 1, i + 1, 'arousal'))
+                    v = self._weighted_average(pivot, self._get_subseq(
+                        av, i - 1, i + 1, 'valence'))
+                    new_av.append([pivot, dict(arousal=a, valence=v)])
+        new_av.append(av[-1])
+        ret = list(sorted(beats + new_av, key=operator.itemgetter(0)))
+        return ret
 
     def get_analyse_result_by_hash(self, hash_idx):
         ''':return: None if not found, otherwise the cached results'''
