@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: 03_train.py
-# $Date: Sun Nov 16 00:24:35 2014 +0800
+# $Date: Sun Nov 16 13:14:31 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 from sklearn.linear_model import LinearRegression
