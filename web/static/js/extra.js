@@ -116,7 +116,9 @@ WavGraph = function(Light) {
     },
     yAxis: {
       title: { text: 'value' },
-      plotLines: [{ value: 0, width: 1, color: '#808080' }]
+      plotLines: [{ value: 0, width: 1, color: '#808080' }],
+      min: -0.5,
+      max: 0.5
     },
     credits: false,
     legend: { enabled: true},
@@ -131,8 +133,4 @@ WavGraph = function(Light) {
   });
 };
 
-WavGraph.prototype = {
-  update : function() {
-
-  },
-};
+WavGraph.prototype = { };
