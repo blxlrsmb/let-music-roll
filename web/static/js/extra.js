@@ -76,7 +76,7 @@ WavGraph = function(Light) {
     for (var i = -10; i <= 0; i += 1) {
       data.push({
         x: time.getTime() + i * 1000,
-        y: 0
+        y: 0,
       });
     }
     return data;
@@ -85,6 +85,15 @@ WavGraph = function(Light) {
   // example data
   var datapoints = LIGHTS.Music.AVdata;
   var nowindex = -1;
+  var min_v = 100, max_v = -100;
+  for (var i = 0; i < datapoints.length; i ++) {
+    if (datapoints[i].a < min_v)  min_v = datapoints[i].a;
+    if (datapoints[i].v < min_v)  min_v = datapoints[i].v;
+    if (datapoints[i].v > max_v)  max_v = datapoints[i].v;
+    if (datapoints[i].a > max_v)  max_v = datapoints[i].a;
+  }
+  if (min_v < -1) min_v = -0.6;
+  if (max_v > 1) max_v = 0.6;
   $('#graph-container').highcharts({
     chart: {
       type: 'spline',
@@ -116,19 +125,21 @@ WavGraph = function(Light) {
     },
     yAxis: {
       title: { text: 'value' },
-      plotLines: [{ value: 0, width: 1, color: '#808080' }],
-      min: -0.5,
-      max: 0.5
+      //plotLines: [{ value: 0, width: 1, color: '#808080' }],
+      min: min_v / 1.6,
+      max: max_v / 1.6
     },
     credits: false,
     legend: { enabled: true},
     exporting: { enabled: false },
     series: [{
       name: 'Arousal',
-      data: gen_empty_data()
+      data: gen_empty_data(),
+      marker: {enabled: false}
     }, {
       name: 'Valence',
-      data: gen_empty_data()
+      data: gen_empty_data(),
+      marker: {enabled: false}
     }]
   });
 };
