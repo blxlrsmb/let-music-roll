@@ -1,7 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
+<<<<<<< HEAD
 # $Date: Sun Nov 16 12:17:53 2014 +0800
+=======
+# $Date: Sun Nov 16 12:04:15 2014 +0800
+>>>>>>> more smooth
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -256,9 +260,9 @@ class MusicAnalyseServer(object):
                 for j in xrange(NR_INSERT):
                     pivot = begin + (end - begin) * (j + 1) / float(NR_INSERT + 1)
                     a = self._weighted_average(pivot, self._get_subseq(
-                        av, i - 1, i + 1, 'arousal'))
+                        av, i - 5, i + 5, 'arousal'))
                     v = self._weighted_average(pivot, self._get_subseq(
-                        av, i - 1, i + 1, 'valence'))
+                        av, i - 5, i + 5, 'valence'))
                     new_av.append([pivot, dict(arousal=a, valence=v)])
         new_av.append(av[-1])
         ret = list(sorted(beats + new_av, key=operator.itemgetter(0)))
