@@ -84,7 +84,8 @@ WavGraph = function(Light) {
   this.light = Light;
   // example data
   var datapoints = LIGHTS.Music.AVdata;
-  var nowindex = -1;
+  var nowindex1 = -1,
+      nowindex2 = -1;
   var min_v = 100, max_v = -100;
   for (var i = 0; i < datapoints.length; i ++) {
     if (datapoints[i].a < min_v)  min_v = datapoints[i].a;
@@ -94,6 +95,7 @@ WavGraph = function(Light) {
   }
   if (min_v < -1) min_v = -1;
   if (max_v > 1) max_v = 1;
+
   $('#graph-container1').highcharts({
     chart: {
       type: 'spline',
@@ -104,10 +106,10 @@ WavGraph = function(Light) {
           // set up the updating of the chart each second
           var series = this.series;
           setInterval(function () {
-            while (nowindex + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex + 1].time) {
-              nowindex ++;
+            while (nowindex1 + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex1 + 1].time) {
+              nowindex1 ++;
               var x = new Date(),
-              y = datapoints[nowindex];
+              y = datapoints[nowindex1];
               x.setHours(0);
               x.setMinutes(0);
               x.setSeconds(y.time);
@@ -148,10 +150,10 @@ WavGraph = function(Light) {
           // set up the updating of the chart each second
           var series = this.series;
           setInterval(function () {
-            while (nowindex + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex + 1].time) {
-              nowindex ++;
+            while (nowindex2 + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex2 + 1].time) {
+              nowindex2 ++;
               var x = new Date(),
-              y = datapoints[nowindex];
+              y = datapoints[nowindex2];
               x.setHours(0);
               x.setMinutes(0);
               x.setSeconds(y.time);

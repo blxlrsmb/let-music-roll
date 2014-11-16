@@ -139,7 +139,8 @@ LIGHTS.Lights.prototype = {
     this.director.stop();
     this.home.start();
     this.experiencePlaying = false;
-    $("#graph-container").innerHTML[0] = "";
+    $("#graph-container1").innerHTML[0] = "";
+    $("#graph-container2").innerHTML[0] = "";
   },
 
   animateLights: function() {
