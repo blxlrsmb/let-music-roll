@@ -300,11 +300,12 @@ LIGHTS.Home.prototype = {
   },
 
   launchPlay: function() {
+    console.log(this.alpha)
 
     if( this.alpha < 1 ) {
-
       this.isLoaded = true;
     } else {
+      this.isLoaded = true;
       this.isLoading = false;
       this.alpha = 0;
     }
@@ -456,7 +457,8 @@ LIGHTS.Home.prototype = {
       }
     }
     else {
-      if ( this.isLoading ) {
+      console.log(this.isLoaded)
+      if ( this.isLoading || !this.isLoaded) {
         // Loading
         if( this.alpha < 1 ) {
 
@@ -474,8 +476,7 @@ LIGHTS.Home.prototype = {
             this.alpha = 0;
           }
         }
-      }
-      else if (!this.isReplay) {
+      } else if (!this.isReplay) {
 
         // Intro Play
         this.alpha += deltaTime * 2;
