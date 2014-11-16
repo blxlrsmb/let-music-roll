@@ -92,8 +92,8 @@ WavGraph = function(Light) {
     if (datapoints[i].v > max_v)  max_v = datapoints[i].v;
     if (datapoints[i].a > max_v)  max_v = datapoints[i].a;
   }
-  if (min_v < -1) min_v = -0.6;
-  if (max_v > 1) max_v = 0.6;
+  if (min_v < -1) min_v = -1;
+  if (max_v > 1) max_v = 1;
   $('#graph-container').highcharts({
     chart: {
       type: 'spline',
