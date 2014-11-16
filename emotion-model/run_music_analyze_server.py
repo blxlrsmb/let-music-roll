@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 12:00:33 2014 +0800
+# $Date: Sun Nov 16 12:17:53 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -219,7 +219,7 @@ class MusicAnalyseServer(object):
                     status='error',
                     detail=traceback.format_exc())
             else:
-                analyse_result = self._populate_arousal_valence(analyse_result)
+                #analyse_result = self._populate_arousal_valence(analyse_result)
                 ret = dict(status='success',
                            data=dict(
                                analyse_result=analyse_result,

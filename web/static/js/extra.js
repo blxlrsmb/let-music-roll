@@ -94,7 +94,7 @@ WavGraph = function(Light) {
   }
   if (min_v < -1) min_v = -1;
   if (max_v > 1) max_v = 1;
-  $('#graph-container').highcharts({
+  $('#graph-container1').highcharts({
     chart: {
       type: 'spline',
       animation: Highcharts.svg, // don't animate in old IE
@@ -112,13 +112,12 @@ WavGraph = function(Light) {
               x.setMinutes(0);
               x.setSeconds(y.time);
               series[0].addPoint([x.getTime(), y.a], true, true);
-              series[1].addPoint([x.getTime(), y.v], true, true);
             }
-          }, 500);
+          }, 300);
         }
       }
     },
-    title: { text: 'A/V' },
+    title: { text: 'Arousal' },
     xAxis: {
       type: 'datetime',
       tickPixelInterval: 200
@@ -130,13 +129,53 @@ WavGraph = function(Light) {
       max: max_v / 1.6
     },
     credits: false,
-    legend: { enabled: true},
+    legend: { enabled: false},
     exporting: { enabled: false },
     series: [{
       name: 'Arousal',
       data: gen_empty_data(),
       marker: {enabled: false}
-    }, {
+    }]
+  });
+
+  $('#graph-container2').highcharts({
+    chart: {
+      type: 'spline',
+      animation: Highcharts.svg, // don't animate in old IE
+      marginRight: 3,
+      events: {
+        load: function () {
+          // set up the updating of the chart each second
+          var series = this.series;
+          setInterval(function () {
+            while (nowindex + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex + 1].time) {
+              nowindex ++;
+              var x = new Date(),
+              y = datapoints[nowindex];
+              x.setHours(0);
+              x.setMinutes(0);
+              x.setSeconds(y.time);
+              series[0].addPoint([x.getTime(), y.v], true, true);
+            }
+          }, 300);
+        }
+      }
+    },
+    title: { text: 'Valence' },
+    xAxis: {
+      type: 'datetime',
+      tickPixelInterval: 200
+    },
+    yAxis: {
+      title: { text: 'value' },
+      //plotLines: [{ value: 0, width: 1, color: '#808080' }],
+      min: min_v / 1.6,
+      max: max_v / 1.6
+    },
+    credits: false,
+    legend: { enabled: false},
+    exporting: { enabled: false },
+    series: [{
       name: 'Valence',
       data: gen_empty_data(),
       marker: {enabled: false}
