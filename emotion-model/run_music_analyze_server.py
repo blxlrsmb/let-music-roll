@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 11:59:06 2014 +0800
+# $Date: Sun Nov 16 12:00:33 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -252,6 +252,7 @@ class MusicAnalyseServer(object):
         for i, (ts, r) in enumerate(av):
             if i + 1 < len(av):
                 new_av.append((ts, r))
+                begin, end = av[i][0], av[i + 1][0]
                 for j in xrange(NR_INSERT):
                     pivot = begin + (end - begin) * (j + 1) / float(NR_INSERT + 1)
                     a = self._weighted_average(pivot, self._get_subseq(
