@@ -104,7 +104,7 @@ WavGraph = function(Light) {
           // set up the updating of the chart each second
           var series = this.series;
           setInterval(function () {
-            if (nowindex + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex + 1].time) {
+            while (nowindex + 1 < datapoints.length && LIGHTS.time > datapoints[nowindex + 1].time) {
               nowindex ++;
               var x = new Date(),
               y = datapoints[nowindex];
