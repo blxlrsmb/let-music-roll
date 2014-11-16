@@ -1,0 +1,87 @@
+% $File: report.tex
+% $Date: Sun Nov 16 13:51:14 2014 +0800
+
+\documentclass {beamer}
+%\usetheme{JuanLesPins}
+\usetheme{Copenhagen}
+\setbeamertemplate{itemize items}[ball]
+\setbeamercovered{transparent}
+\setbeamertemplate{itemize subitem}[circle] % if you wnat a circle
+\setbeamertemplate{blocks}[rounded][shadow=true]
+%\usetheme[height=7mm]{Rochester}
+\useoutertheme{infolines}
+\usepackage{fontspec,amsmath,amssymb,zhspacing,verbatim}
+\usepackage[backend=biber]{biblatex}
+
+
+\let\Oldsum\sum
+\renewcommand{\sum}{\displaystyle\Oldsum}
+\let\Oldprod\prod
+\renewcommand{\prod}{\displaystyle\Oldprod}
+
+\theoremstyle{plain}
+
+\usepackage[absolute,overlay]{textpos}
+\newenvironment{reference}[2]{%
+  \begin{textblock*}{\textwidth}(#1,#2)
+      \footnotesize\it\bgroup\color{red!50!black}}{\egroup\end{textblock*}}
+
+\zhspacing
+
+\setbeamertemplate{footline} {
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex]{corporatecolor}
+      \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+        \usebeamerfont{author in head/foot}
+        \insertshortauthor
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+        \usebeamerfont{title in head/foot}
+        \insertshorttitle
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+        \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+        \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+      \end{beamercolorbox}
+    \end{beamercolorbox}
+  }%
+  \vskip0pt%
+}
+
+\title{Let Music Roll}
+\subtitle{HackShanghai}
+\author {Team: \textbf{blxlrsmb}}
+\institute{
+  Department of Computer Science and Technology\\
+  Tsinghua University\\
+}
+\date{Nov 16, 2014}
+
+\begin{document}
+
+\frame[plain]{\titlepage }
+
+%\begin{frame}{Overview}
+%\end{frame}
+
+%\begin{frame}{Content}
+%\tableofcontents
+%\end{frame}
+
+\input{q1.tex}
+%\input{q2.tex}
+%\input{q3.tex}
+%\input{q4.tex}
+%\input{trick.tex}
+
+
+
+\begin{frame}{}
+  \begin{center}
+  \Huge Demo!
+\end{center}
+\end{frame}
+
+\end{document}
+

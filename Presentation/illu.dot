@@ -1,0 +1,8 @@
+digraph hello {
+	a[label="Emotion & Beat Analysis"];
+	b[label="Client"];
+	c[label="Visualization Config Generator"];
+	a->c[label="arousal/valence, beat"];
+	c->b[label="config"];
+	b->a[label="music"]
+}
