@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 12:22:18 2014 +0800
+# $Date: Sun Nov 16 12:55:35 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -140,6 +140,13 @@ class MusicAnalyseServer(object):
         @app.route('/api/get_animation_config_by_hash', methods=['GET'])
         def get_animation_config_by_hash():
             hash_idx = request.values.get('hash_idx', None)
+
+            # XXX
+            if hash_idx == '731880bd84079c854106e743c943c23e':
+                logger.warn('HACKING MUSIC...')
+                with open('./anim_config_gen/the-journey.json') as f:
+                    return jsonify(json.load(f))
+
             if hash_idx is None:
                 ret = dict(status='error',
                            detail='No hash_idx param found.')
@@ -208,7 +215,7 @@ class MusicAnalyseServer(object):
         else:
             try:
                 animation_config = self.animation_gen_method(
-                    analyse_result)
+                    analyse_result, hash_idx)
                 if animation_config is None:
                     ret = dict(
                         status='error',

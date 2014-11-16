@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: server-conf.py
-# $Date: Sun Nov 16 05:47:58 2014 +0800
+# $Date: Sun Nov 16 12:53:41 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import operator
@@ -54,7 +54,7 @@ def _gen_get_config_input(result):
     return ret
 
 
-def _gen_anim_conf(analyse_result):
+def _gen_anim_conf(analyse_result, hash_idx):
     analyse_result = sorted(analyse_result, key=operator.itemgetter(0))
     config_input =  _gen_get_config_input(analyse_result)
 
