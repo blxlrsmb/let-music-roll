@@ -1,5 +1,5 @@
 %File: q1.tex
-%Date: Sun Nov 16 14:03:25 2014 +0800
+%Date: Sun Nov 16 14:11:57 2014 +0800
 %Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{Introduction}
@@ -19,7 +19,7 @@ Music understanding and visualization.
 \section{Backend Algorithms}
 \begin{frame}{Beat Detection}
 \begin{enumerate}
-    \item Separate percussive and harmonic:
+    \item Separate \textbf{percussive} and \textbf{harmonic}:
       \begin{enumerate}
         \item Short-time Fourier Transform
         \item Harmonic Percussive Source Separation
@@ -44,9 +44,9 @@ Music understanding and visualization.
 \end{frame}
 
 \begin{frame}{Emotion Detection - Data \& Model}
-       \textbf{"Emotion in Music"} public dataset.
+       \textbf{"Emotion in Music 2014"} public dataset.
 
-     Trained with Gradient Boosting Trees.
+     Trained with \textbf{Gradient Boosting Trees(GBT)} on 2.8G data.
 
      Predict Arousal/Valence of music segments with high accuracy.
 \begin{figure}[H]
