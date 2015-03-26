@@ -3,7 +3,10 @@ It is a web service which automatically analyses the music you upload,
 and shows you an exciting, colorful 3D tour which visualizes the music as you listen.
 Sorry that we don't have a working online system for now, since the backend
 analysis requires intensive computing resources to work.
-We will work on it later when we are free.
+
+![demo](https://github.com/ppwwyyxx/let-music-roll/raw/master/demo/screenshot.jpg)
+
+NOTE: This system was developed by a group of four within 24 hours at HackShanghai.
 
 # How it works
 
@@ -37,3 +40,6 @@ music beats, and change activities as the music gets more/less exciting.
 cd emotion-model
 ./run_music_analyze_server.py server-conf.py
 ```
+Intensive computing is required to analyse an uploaded music.
+You can try with the songs in 'demo' directory,
+whose analysis results are cached inside this repo.

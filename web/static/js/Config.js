@@ -70,8 +70,8 @@ LIGHTS.Config = {
 	// avatarHandler:          'http://test.lights.elliegoulding.interscope.com/AvatarHandler.ashx?file=',
 	avatarHandler:          '',
 
-	// tweetThis:              'http://twitter.com/share?text=Lose%20yourself%20in%20@EllieGoulding%E2%80%99s%20#Lights%20v2%20an%20interactive%20&%20colorful%20music%20experience%20using%20#webgl&url=http://lights.elliegoulding.com',
-	tweetThis:              'http://twitter.com/share?text=Lose%20yourself%20in%20an%20interactive%20music%20experience&url=http://lights.helloenjoy.com',
+	// tweetThis:              '',
+	tweetThis:              '',
 	// tweetThis:              'sharing_disabled.html',
 	// tweetThis:              'http://twitter.com',
 

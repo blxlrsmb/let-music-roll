@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: run_music_analyze_server.py
-# $Date: Sun Nov 16 14:17:06 2014 +0800
+# $Date: Thu Mar 26 22:52:53 2015 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 import json
@@ -19,7 +19,7 @@ import subprocess
 import functools
 
 import librosa
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, url_for
 import numpy as np
 
 from lmr.features import extract as extract_feature
@@ -136,6 +136,10 @@ class MusicAnalyseServer(object):
 
     def build_app(self):
         app = self.app
+
+        @app.route('/')
+        def index():
+            return redirect(url_for('static', filename='index.html'))
 
         @app.route('/api/get_animation_config_by_hash', methods=['GET'])
         def get_animation_config_by_hash():

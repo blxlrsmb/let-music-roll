@@ -1,5 +1,5 @@
 //File: Home.js
-//Date: Sun Nov 16 08:57:57 2014 +0800
+//Date: Thu Mar 26 23:02:14 2015 +0800
 
 LIGHTS.Home = function( renderManager, gui, callback ) {
 
@@ -214,28 +214,6 @@ LIGHTS.Home.prototype = {
     this.replayRot = this.replay.rotation;
     this.replayRot.y = rad180;
     this.scene.addChild( this.replay );
-
-    // Tweet
-    texture = new THREE.Texture( LIGHTS.images.tweetButton );
-    texture.needsUpdate = true;
-
-    this.tweetMaterial = new THREE.MeshBasicMaterial( {
-
-      map:            texture,
-      color:          0x000000,
-      opacity:        1 - this.buttonOpacity,
-      transparent:    true
-    } );
-
-    this.tweetColor = this.tweetMaterial.color;
-
-    this.tweet = new THREE.Mesh( new THREE.PlaneGeometry( 128, 128 ), this.tweetMaterial );
-    this.tweet.position.x = this.replayButtonsX;
-    this.tweet.position.y = this.buttonY;
-    this.tweet.position.z = 200;
-    this.tweetRot = this.tweet.rotation;
-    this.tweetRot.y = rad180;
-    this.scene.addChild( this.tweet );
   },
 
   // _______________________________________________________________________________________ Start
