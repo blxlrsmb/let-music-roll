@@ -8,7 +8,7 @@ import argparse
 import os
 import csv
 
-from neupack.utils import serial, fs
+from lmr.utils import serial, fs
 
 import logging
 logger = logging.getLogger(__name__)

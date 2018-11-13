@@ -4,7 +4,7 @@
 # $Date: Sat Nov 15 17:21:13 2014 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
-from neupack.utils import serial
+from lmr.utils import serial
 from IPython import embed
 import argparse
 

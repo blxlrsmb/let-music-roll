@@ -10,7 +10,7 @@ from lmr.utils import wavread
 from lmr.preproc import ensure_signal_duration
 from lmr.features import extract
 
-from neupack.utils import timed_operation
+from lmr.utils import timed_operation
 
 
 x, fs = wavread('./Data/10.wav')
